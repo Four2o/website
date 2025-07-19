@@ -1,0 +1,314 @@
+/* Base styles for entire page */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow: hidden; font-family: sans-serif; background-color: #111; }
+#scene-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* General UI panel styling */
+.ui-panel {
+    position: absolute;
+    background-color: rgba(40, 40, 40, 0.9);
+    color: #eee;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px); /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px; /* Consistent padding for all ui-panels */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions for show/hide */
+    z-index: 100; /* Ensure panels are above the 3D scene by default */
+}
+
+/* NEW: Unified .hidden class for all ui-panels */
+.ui-panel.hidden {
+    opacity: 0;
+    pointer-events: none; /* Allow clicks to pass through when hidden */
+    transform: translateY(20px); /* A general transform for hiding */
+    display: none; /* THIS IS THE CRITICAL ADDITION */
+}
+
+/* Ensure .ui-panel has a default display when NOT hidden */
+.ui-panel:not(.hidden) {
+    display: block; /* Default display for most UI panels */
+}
+
+/* Tweakpane specific positioning for main controls */
+#main-controls-container {
+    top: 15px;
+    left: 15px;
+    width: 280px;
+    /* Max height to leave space for save/load panel below */
+    max-height: calc(100vh - 30px - 250px); /* Adjusted for more buttons */
+    overflow-y: auto; /* Enable scrolling if content exceeds height */
+    z-index: 100; /* Explicit z-index */
+}
+/* Override Tweakpane's default absolute positioning for embedded panes */
+#main-controls-container .tp-dfwv {
+    position: relative !important;
+    top: auto;
+    left: auto;
+    width: auto !important; /* Allow it to fill parent */
+    height: auto !important; /* Allow it to fit content */
+}
+
+/* Right Tool Panel (hosts Object Editor or Placement Settings dynamically) */
+#right-tool-panel-container {
+    top: 15px; /* Aligned with sidebar and other top panels */
+    right: 245px; /* Positioned to the left of the sidebar (220px width + 15px right margin) */
+    width: 220px;
+    max-height: calc(100vh - 30px); /* Allow scrolling for tall content */
+    overflow-y: auto;
+    z-index: 101; /* Explicit z-index: higher than main controls/sidebar */
+}
+#right-tool-panel-container .tp-dfwv { /* Override Tweakpane's defaults for embedded panes */
+    position: relative !important;
+    top: auto;
+    left: auto;
+    width: auto !important;
+    height: auto !important;
+}
+/* Flexbox for labels and values in Tweakpane-generated embedded panels */
+#right-tool-panel-container .tp-lblv { display: flex; justify-content: space-between; align-items: center; }
+#right-tool-panel-container .tp-lblv_l { flex-grow: 1; }
+#right-tool-panel-container .tp-lblv_v { width: 110px; flex-shrink: 0; }
+
+/* Unified Sidebar Styling (Placeables list) */
+#sidebar-container {
+    top: 15px;
+    right: 15px;
+    width: 220px;
+    max-height: calc(100vh - 30px); /* Fill height, but leave space */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    z-index: 100; /* Explicit z-index */
+}
+/* NEW: Styling for the search input in the sidebar */
+#sidebar-search-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #eee;
+    font-size: 14px;
+}
+#sidebar-search-input:focus {
+    outline: none;
+    border-color: rgba(80, 150, 255, 0.5);
+}
+/* Container for the Tweakpane instance to allow scrolling */
+#sidebar-pane-container {
+    flex-grow: 1; /* Allow this container to fill remaining space */
+    overflow-y: auto; /* Enable scrolling for the Tweakpane content */
+}
+/* Specific Tweakpane styles for sidebar to ensure it looks right */
+#sidebar-pane-container .tp-dfwv {
+    position: relative !important;
+    top: auto;
+    left: auto;
+    width: 100% !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* General Tweakpane overrides: ensure they fit into ui-panel style */
+.tp-dfwv {
+    background-color: transparent !important; /* Let ui-panel handle background */
+    border: none !important; /* Let ui-panel handle border */
+    box-shadow: none !important; /* Let ui-panel handle shadow */
+}
+
+/* Info Panel styles (for messages like "Saved", "Error", etc.) */
+#info-panel {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 450px;
+    text-align: center;
+    z-index: 102; /* Highest z-index for alerts */
+}
+
+#info-panel #info-button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    border: none;
+    background-color: #c84138; /* Red for action/dismiss */
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+#info-panel #info-button:hover {
+    background-color: #e06158;
+}
+#info-panel h3 { margin-bottom: 8px; font-size: 1.1em; }
+#info-panel p { font-size: 0.9em; }
+
+/* Save/Load Panel Styling */
+#saveLoadPanel {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 280px; /* Match main controls width for symmetry */
+    z-index: 99; /* Ensure it's above the summary panel */
+    padding: 8px; /* Consistent with other panels */
+}
+#saveLoadPanel h3 {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgb(153, 153, 153);
+    margin: 0 0 8px 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 4px;
+}
+#saveLoadPanel button, #saveLoadPanel label.save-btn {
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgb(242, 242, 242);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s, border-color 0.2s;
+    text-align: center;
+}
+/* NEW: Styling for disabled buttons */
+#saveLoadPanel button:disabled {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: rgba(242, 242, 242, 0.3);
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+#saveLoadPanel button:not(:disabled):hover, #saveLoadPanel label.save-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+#saveLoadPanel button:not(:disabled):active, #saveLoadPanel label.save-btn:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+#saveLoadPanel button:last-of-type, #saveLoadPanel label.save-btn:last-of-type {
+    margin-bottom: 0;
+}
+/* NEW: Button grid for undo/redo */
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+/* Specific styling for the import label/input to hide file input */
+#saveLoadPanel label.save-btn {
+    display: block;
+}
+#saveLoadPanel #importFile {
+    display: none;
+}
+
+/* Plant Summary Panel Styling */
+#plant-summary-panel {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1500px;
+    max-width: calc(100vw - 30px);
+    top: 15px;
+    max-height: calc(100vh - 30px - 150px);
+    overflow-y: auto;
+    overflow-x: auto;
+    z-index: 100;
+}
+#plant-summary-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8em;
+    table-layout: fixed;
+}
+#plant-summary-panel th, #plant-summary-panel td {
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+#plant-summary-panel thead tr {
+    background-color: rgba(255,255,255,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+#plant-summary-panel th:nth-child(1) { width: 220px; }
+#plant-summary-panel th:nth-child(2) { width: 120px; }
+#plant-summary-panel th:nth-child(3) { width: 160px; }
+#plant-summary-panel th:nth-child(4) { width: 160px; }
+#plant-summary-panel th:nth-child(5) { width: 120px; }
+#plant-summary-panel th:nth-child(6) { width: 220px; }
+#plant-summary-panel th:nth-child(7) { width: 170px; }
+#plant-summary-panel th:nth-child(8) { width: 200px; }
+#plant-summary-panel th:nth-child(9) { width: 130px; }
+
+
+#plant-summary-panel h3, #plant-summary-panel p {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgb(153, 153, 153);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Responsive adjustments for smaller screens (e.g., mobile) */
+@media (max-width: 768px) {
+    #main-controls-container,
+    #sidebar-container,
+    #right-tool-panel-container {
+        width: calc(100% - 30px);
+        left: 15px;
+        right: 15px;
+        top: 15px;
+        max-height: 45vh;
+    }
+ 
+    #sidebar-container { top: calc(15px + 45vh + 15px); max-height: 45vh; }
+    #right-tool-panel-container { top: calc(15px + 45vh + 15px); z-index: 101; }
+    #saveLoadPanel { width: calc(100% - 30px); left: 15px; bottom: 15px; }
+    #info-panel { width: calc(100% - 30px); }
+    #plant-summary-panel {
+        top: calc(15px + 45vh + 15px + 45vh + 15px);
+        bottom: calc(15px + 120px);
+        left: 15px;
+        width: calc(100% - 30px);
+        right: 15px;
+        max-width: unset;
+        max-height: unset;
+        overflow-y: auto;
+        overflow-x: auto;
+        transform: none;
+    }
+    #plant-summary-panel th, #plant-summary-panel td {
+        width: auto;
+        white-space: normal;
+    }
+}
+
+/* 3D Axis Indicator Container (FIXED) */
+#axis-indicator-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    z-index: 250; /* Raised above info button */
+    pointer-events: none; /* Allows clicks to pass through */
+} 
