@@ -82,10 +82,15 @@
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.0.8/dist/tweakpane.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 
+    <!-- DATA MODULES (global) -->
+    <script src="js/structures.js"></script>
+    <script src="js/plants.js"></script>
+
     <!-- APPLICATION JAVASCRIPT -->
-    <script type="module">
-        import { STRUCTURES } from './js/structures.js';
-        import { PLANTS } from './js/plants.js';
+    <script>
+        // Reference global data loaded above
+        const STRUCTURES = window.STRUCTURES;
+        const PLANTS = window.PLANTS;
 
         // --- 1. DEFINE ALL CONSTANTS, CLASSES, AND FUNCTIONS ---
 

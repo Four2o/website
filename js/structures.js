@@ -1,4 +1,4 @@
-export const STRUCTURES = [
+window.STRUCTURES = [
     { name: 'Shed', width: 2, depth: 3, height: 2.2, snappable: false, resizable: true, materialProps: { color: 0xA0522D, roughness: 0.9 } },
     { name: 'Greenhouse', width: 2, depth: 4, height: 2.5, snappable: false, resizable: true, materialProps: { color: 0x9ACD32, roughness: 0.1, transparent: true, opacity: 0.5 } },
     { name: 'Planter', width: 1, depth: 2, height: 0.5, snappable: false, resizable: true,
@@ -14,4 +14,3 @@ export const STRUCTURES = [
     { name: 'Composter', width: 1, depth: 1, height: 1, snappable: false, resizable: true, materialProps: { color: 0x654321, roughness: 0.95 } },
     { name: 'EU Pallet', width: 1.2, depth: 0.8, height: 0.144, snappable: false, resizable: false, materialProps: { color: 0xDEB887, roughness: 1.0 } }, // Not resizable
 ];
-
