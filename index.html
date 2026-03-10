@@ -101,6 +101,9 @@
             { name: 'Composter', width: 1, depth: 1, height: 1, snappable: false, resizable: true, materialProps: { color: 0x654321, roughness: 0.95 } },
             { name: 'EU Pallet', width: 1.2, depth: 0.8, height: 0.144, snappable: false, resizable: false, materialProps: { color: 0xDEB887, roughness: 1.0 } }, // Not resizable
         ];
+        if (!Array.isArray(STRUCTURES) || STRUCTURES.length === 0) {
+            throw new Error('STRUCTURES data is invalid. Expected a non-empty array.');
+        }
 
         /* const PLANTS = {
             vegetables: [
@@ -1397,6 +1400,9 @@
 
 
             _createMeshFromDefinition(itemData) {
+                if (!itemData || typeof itemData !== 'object' || !itemData.name || typeof itemData.width !== 'number' || typeof itemData.height !== 'number') {
+                    throw new Error('_createMeshFromDefinition: invalid itemData. Expected object with name, width, height.');
+                }
                 if (itemData.isHollow) {
                     return this.createPlanterMeshes(
                         itemData.width, itemData.depth, itemData.height,
@@ -2044,6 +2050,9 @@
             }
 
             enterPlantInPlanterSelectionMode(planter) {
+                if (!planter?.userData?.isPlanter) {
+                    throw new Error('enterPlantInPlanterSelectionMode: object is not a planter. Expected userData.isPlanter === true.');
+                }
                 this.deselectObject();
                 this.mode = 'PLANT_IN_PLANTER_SELECT_PLANT';
                 this.activePlanter = planter;
@@ -2054,6 +2063,12 @@
             }
 
             activatePlantInPlanterPlacement(plantDef) {
+                if (!this.activePlanter) {
+                    throw new Error('activatePlantInPlanterPlacement: activePlanter is null. Enter planter mode first.');
+                }
+                if (!plantDef || typeof plantDef !== 'object' || !plantDef.name || typeof plantDef.width !== 'number' || typeof plantDef.height !== 'number') {
+                    throw new Error('activatePlantInPlanterPlacement: invalid plantDef. Expected object with name, width, height.');
+                }
                 this.activePlanterHistory = [];
                 this._savePlanterStateToHistory();
                 const initialPlantDef = {
@@ -2082,6 +2097,9 @@
             }
 
             addPopulateOptions(pane) {
+                if (!this.activePlanter?.userData?.dimensions) {
+                    throw new Error('addPopulateOptions: activePlanter has no dimensions. Planter may be corrupted.');
+                }
                 const { soilRows, soilCols } = this.activePlanter.userData.dimensions;
                 const gridFolder = pane.addFolder({ title: 'Populate Grid', expanded: true });
                 gridFolder.addButton({ title: 'Cells: All Centers' }).on('click', () => this._populateGrid(0, soilRows, 0, soilCols, 'center'));
@@ -2095,6 +2113,11 @@
             }
 
             backToPlantSelection() {
+                if (!this.activePlanter) {
+                    console.error('backToPlantSelection: activePlanter is null. Exiting planter mode.');
+                    this.exitPlantInPlanterSelectionMode();
+                    return;
+                }
                 if (this.plantPlacementPreview) {
                     this.plantPlacementPreview.parent?.remove(this.plantPlacementPreview);
                     disposeObject(this.plantPlacementPreview);
@@ -2143,7 +2166,9 @@
             }
 
             placePlantInPlanter(plantDef, localPosition, rotationY) {
-                if (!this.activePlanter || !plantDef) return;
+                if (!this.activePlanter || !plantDef) {
+                    throw new Error('placePlantInPlanter: activePlanter or plantDef is missing. Cannot place plant.');
+                }
                 this._savePlanterStateToHistory();
                 this._createAndPlaceObject(plantDef, localPosition, rotationY, this.activePlanter);
                 this.updatePlantSummaryPanel();
