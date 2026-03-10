@@ -52,6 +52,8 @@
             this.undoManager = new UndoManager(this); // NEW: Initialize UndoManager
 
             this.raycaster = new THREE.Raycaster(); this.mouse = new THREE.Vector2();
+            this._lastMouseMoveTime = 0;
+            this._mouseMoveThrottleMs = 33;
             this.mode = 'IDLE';
             this.isPlacementValid = false;
             this.validPlacementColor = new THREE.Color(0x5a8e3b);
@@ -1873,7 +1875,10 @@
 
 
         onMouseMove(event) {
-            if (event) { this.updateMouse(event); }
+            if (event) this.updateMouse(event);
+            const now = performance.now();
+            if (now - this._lastMouseMoveTime < this._mouseMoveThrottleMs) return;
+            this._lastMouseMoveTime = now;
             switch (this.mode) {
                 case 'PLACEMENT': case 'MOVE': this._handleMouseMovePlacement(); break;
                 case 'PLANT_IN_PLANTER_PLACEMENT': case 'MOVE_PLANT_IN_PLANTER': this._handleMouseMovePlantInPlanter(); break;
@@ -2383,6 +2388,21 @@
         setRulersVisible(v) { if (this.rulers?.container) this.rulers.container.visible = v; }
         setGridOpacity(v) { if (this.plot.grid) this.plot.grid.material.opacity = v; }
         setRulerOpacity(v) { if (this.rulers?.container) this.rulers.container.traverse(c => { if(c.material) c.material.opacity = v; }); }
+        setPerformanceMode(enabled) {
+            if (!this.sunLight || !this.renderer) return;
+            if (enabled) {
+                this.sunLight.shadow.mapSize.width = 512;
+                this.sunLight.shadow.mapSize.height = 512;
+                this.renderer.shadowMap.type = THREE.BasicShadowMap;
+                this._mouseMoveThrottleMs = 50;
+            } else {
+                this.sunLight.shadow.mapSize.width = 2048;
+                this.sunLight.shadow.mapSize.height = 2048;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this._mouseMoveThrottleMs = 33;
+            }
+            this.sunLight.shadow.mapSize.needsUpdate = true;
+        }
         onResize() {
             const { clientWidth, clientHeight } = this.renderer.domElement.parentElement;
             this.camera.aspect = clientWidth / clientHeight;
@@ -2689,6 +2709,7 @@
                     this.controlsPanel.onUnitsChange(saveData.config.units); 
                     this.setTheme(saveData.config.darkMode);
                     this.setViewLock(saveData.config.viewLocked);
+                    if (saveData.config.performanceMode !== undefined) this.setPerformanceMode(saveData.config.performanceMode);
                     this.controlsPanel.pane.refresh();
                     this._updateIsometricCameraPosition(false);
                     this.updateSunPosition(saveData.config.timeOfDay || 12.0); // Restore sun position

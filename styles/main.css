@@ -1,7 +1,14 @@
 /* Base styles for entire page */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { overflow: hidden; font-family: sans-serif; background-color: #111; }
-#scene-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+#scene-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none; /* Prevent scroll/zoom on canvas for OrbitControls */
+}
 
 /* General UI panel styling */
 .ui-panel {
@@ -171,7 +178,11 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 #saveLoadPanel button, #saveLoadPanel label.save-btn {
     width: 100%;
     margin-bottom: 6px;
-    padding: 6px 8px;
+    padding: 8px 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(255, 255, 255, 0.1);
     color: rgb(242, 242, 242);
@@ -180,6 +191,7 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     font-size: 12px;
     transition: background-color 0.2s, border-color 0.2s;
     text-align: center;
+    touch-action: manipulation;
 }
 /* NEW: Styling for disabled buttons */
 #saveLoadPanel button:disabled {
@@ -279,7 +291,21 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
         top: 15px;
         max-height: 45vh;
     }
- 
+    /* Larger touch targets for mobile (44px min per touch guidelines) */
+    #saveLoadPanel button,
+    #saveLoadPanel label.save-btn {
+        min-height: 44px;
+        padding: 10px 14px;
+    }
+    .ui-panel button,
+    .ui-panel .tp-btn {
+        min-height: 44px;
+        padding: 10px 14px;
+    }
+    #sidebar-search-input {
+        min-height: 44px;
+        padding: 12px;
+    }
     #sidebar-container { top: calc(15px + 45vh + 15px); max-height: 45vh; }
     #right-tool-panel-container { top: calc(15px + 45vh + 15px); z-index: 101; }
     #saveLoadPanel { width: calc(100% - 30px); left: 15px; bottom: 15px; }

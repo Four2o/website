@@ -168,6 +168,7 @@
                 darkMode: false, subdivisions: 1.0,
                 gridOpacity: 0.3, rulerOpacity: 1.0, viewLocked: false,
                 showLabels: false, isometricZoom: 1.0, timeOfDay: 12.0, showAxisIndicator: true,
+                performanceMode: false,
             };
             const plotFolder = this.pane.addFolder({ title: 'Plot Dimensions' });
             const unitOptions = Object.keys(UNITS).reduce((acc, key) => { acc[UNITS[key].label] = key; return acc; }, {});
@@ -185,6 +186,7 @@
             this.viewFolder.addInput(this.config, 'darkMode').on('change', (ev) => this.world.setTheme(ev.value));
             this.viewFolder.addInput(this.config, 'showLabels', { label: 'Show Labels' }).on('change', (ev) => this.world.updateAllObjectLabelsVisibility());
             this.viewFolder.addInput(this.config, 'showAxisIndicator', { label: 'Show Axis Indicator' }).on('change', (ev) => this.world.toggleAxisIndicator(ev.value));
+            this.viewFolder.addInput(this.config, 'performanceMode', { label: 'Performance Mode' }).on('change', (ev) => this.world.setPerformanceMode(ev.value));
             this.viewFolder.addButton({ title: 'Plant Summary' }).on('click', () => this.world.togglePlantSummaryPanel());
             this.viewFolder.addButton({ title: 'Top-Down View' }).on('click', () => this.world.goToTopView());
             this.viewFolder.addButton({ title: 'Isometric View' }).on('click', () => this.world.goToIsometricView());
