@@ -88,7 +88,7 @@ html, body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border-subtle);
-    padding: 14px;
+    padding: 18px 20px;
     box-shadow: var(--shadow-md);
     transition: opacity 0.25s ease, transform 0.25s ease;
     z-index: 100;
@@ -107,16 +107,19 @@ html, body {
     display: block; /* Default display for most UI panels */
 }
 
-/* Tweakpane specific positioning for main controls */
+/* Main controls container */
 #main-controls-container {
     top: 15px;
     left: 15px;
-    width: 280px;
-    /* Max height to leave space for save/load panel below */
-    max-height: calc(100vh - 30px - 250px); /* Adjusted for more buttons */
-    overflow-y: auto; /* Enable scrolling if content exceeds height */
-    z-index: 100; /* Explicit z-index */
+    width: 300px;
+    max-height: calc(100vh - 30px - 280px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
 }
+#main-controls-container::-webkit-scrollbar { width: 8px; }
+#main-controls-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+#main-controls-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 /* Override Tweakpane's default absolute positioning for embedded panes */
 #main-controls-container .tp-dfwv {
     position: relative !important;
@@ -128,13 +131,17 @@ html, body {
 
 /* Right Tool Panel (hosts Object Editor or Placement Settings dynamically) */
 #right-tool-panel-container {
-    top: 15px; /* Aligned with sidebar and other top panels */
-    right: 245px; /* Positioned to the left of the sidebar (220px width + 15px right margin) */
-    width: 220px;
-    max-height: calc(100vh - 30px); /* Allow scrolling for tall content */
+    top: 15px;
+    right: 290px;
+    width: 240px;
+    max-height: calc(100vh - 30px);
     overflow-y: auto;
-    z-index: 101; /* Explicit z-index: higher than main controls/sidebar */
+    overflow-x: hidden;
+    z-index: 101;
 }
+#right-tool-panel-container::-webkit-scrollbar { width: 8px; }
+#right-tool-panel-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+#right-tool-panel-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 #right-tool-panel-container .tp-dfwv { /* Override Tweakpane's defaults for embedded panes */
     position: relative !important;
     top: auto;
@@ -147,21 +154,24 @@ html, body {
 #right-tool-panel-container .tp-lblv_l { flex-grow: 1; }
 #right-tool-panel-container .tp-lblv_v { width: 110px; flex-shrink: 0; }
 
-/* Unified Sidebar Styling (Placeables list) */
+/* Sidebar */
 #sidebar-container {
     top: 15px;
     right: 15px;
-    width: 220px;
-    max-height: calc(100vh - 30px); /* Fill height, but leave space */
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack children vertically */
-    z-index: 100; /* Explicit z-index */
+    width: 260px;
+    max-height: calc(100vh - 30px);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
 }
-/* NEW: Styling for the search input in the sidebar */
+#sidebar-container::-webkit-scrollbar { width: 8px; }
+#sidebar-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+#sidebar-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+/* Search input in the sidebar */
 #sidebar-search-input {
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-muted);
     background: rgba(0, 0, 0, 0.25);
@@ -178,9 +188,13 @@ html, body {
 }
 /* Container for the Tweakpane instance to allow scrolling */
 #sidebar-pane-container {
-    flex-grow: 1; /* Allow this container to fill remaining space */
-    overflow-y: auto; /* Enable scrolling for the Tweakpane content */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 4px;
 }
+#sidebar-pane-container::-webkit-scrollbar { width: 8px; }
+#sidebar-pane-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+#sidebar-pane-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 /* Specific Tweakpane styles for sidebar to ensure it looks right */
 #sidebar-pane-container .tp-dfwv {
     position: relative !important;
@@ -195,18 +209,25 @@ html, body {
     -webkit-backdrop-filter: none;
 }
 
-/* Tweakpane overrides */
+/* Tweakpane overrides – consistent spacing and hierarchy */
 .tp-dfwv {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
+.tp-rotv { margin-bottom: 4px !important; }
 .tp-rotv_t {
     color: var(--text-secondary) !important;
     font-size: 11px !important;
     font-weight: 600 !important;
-    letter-spacing: 0.04em !important;
+    letter-spacing: 0.05em !important;
 }
+.tp-fldv { margin-bottom: 12px !important; }
+.tp-fldv:last-child { margin-bottom: 0 !important; }
+.tp-lblv { margin-bottom: 10px !important; }
+.tp-lblv:last-child { margin-bottom: 0 !important; }
+.tp-ptv { margin-bottom: 10px !important; }
+.tp-lblv_l, .tp-sldv_t, .tp-txtv_i { color: var(--text-primary) !important; font-size: 13px !important; }
 .tp-btn {
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid var(--border-muted) !important;
@@ -214,9 +235,17 @@ html, body {
     color: var(--text-primary) !important;
     font-family: var(--font-sans) !important;
     font-weight: 500 !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+    min-height: 40px !important;
     transition: background 0.2s ease !important;
 }
 .tp-btn:hover { background: rgba(255, 255, 255, 0.14) !important; }
+/* Sidebar item buttons – more spacing */
+#sidebar-pane-container .tp-btn {
+    margin-bottom: 6px !important;
+}
+#sidebar-pane-container .tp-fldv_t { padding: 8px 0 4px 0 !important; }
 
 /* Info Panel */
 #info-panel {
@@ -252,9 +281,9 @@ html, body {
     position: absolute;
     bottom: 15px;
     left: 15px;
-    width: 280px;
+    width: 300px;
     z-index: 99;
-    padding: 14px;
+    padding: 18px 20px;
 }
 #saveLoadPanel h3 {
     font-size: 10px;
@@ -262,8 +291,8 @@ html, body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-muted);
-    margin: 14px 0 10px 0;
-    padding: 0 0 6px 0;
+    margin: 18px 0 12px 0;
+    padding: 0 0 8px 0;
     border-bottom: 1px solid var(--border-subtle);
 }
 #saveLoadPanel h3:first-child { margin-top: 0; }
@@ -281,18 +310,18 @@ html, body {
     cursor: pointer;
 }
 #saveLoadPanel .btn-accent {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-muted);
 }
-#saveLoadPanel .btn-accent:hover { background: rgba(59, 130, 246, 0.3); }
+#saveLoadPanel .btn-accent:hover { background: var(--accent-muted); }
 #saveLoadPanel .btn-danger {
     background: var(--danger-muted);
-    border-color: rgba(220, 76, 62, 0.3);
+    border-color: rgba(220, 76, 62, 0.25);
 }
-#saveLoadPanel .btn-danger:hover { background: rgba(220, 76, 62, 0.35); }
+#saveLoadPanel .btn-danger:hover { background: rgba(220, 76, 62, 0.3); }
 #saveLoadPanel button, #saveLoadPanel label.save-btn {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     padding: 10px 14px;
     min-height: 44px;
     display: flex;
