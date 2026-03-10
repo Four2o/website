@@ -1,27 +1,84 @@
 /**
  * Bootstrap and initialization for the Allotment Planner.
- * Depends on: All other js modules (structures, plants, config, utils, classes, world)
+ * Depends on: All other js modules (logger, structures, plants, config, utils, classes, world)
  */
 (function() {
     'use strict';
 
-    const STRUCTURES = window.STRUCTURES;
-    if (!Array.isArray(STRUCTURES) || STRUCTURES.length === 0) {
-        throw new Error('STRUCTURES data failed to load. Ensure js/structures.js is loaded before the main script.');
-    }
-    const PLANTS = window.PLANTS;
-    if (!PLANTS || typeof PLANTS !== 'object' || Object.keys(PLANTS).length === 0) {
-        throw new Error('PLANTS data failed to load. Ensure js/plants.js is loaded before the main script.');
+    const log = window.AppLogger || {
+        error: (msg, ctx) => { console.error('[Allotment]', msg, ctx || ''); },
+        warn: (msg, ctx) => { console.warn('[Allotment]', msg, ctx || ''); },
+        info: () => {}
+    };
+
+    function runIntegrationChecks() {
+        const missing = [];
+        if (typeof THREE === 'undefined') missing.push('Three.js');
+        if (typeof Tweakpane === 'undefined') missing.push('Tweakpane');
+        if (typeof anime === 'undefined') missing.push('Anime.js');
+        if (!window.STRUCTURES || !Array.isArray(window.STRUCTURES) || window.STRUCTURES.length === 0) missing.push('STRUCTURES (js/structures.js)');
+        if (!window.PLANTS || typeof window.PLANTS !== 'object' || Object.keys(window.PLANTS).length === 0) missing.push('PLANTS (js/plants.js)');
+        if (!window.UNITS) missing.push('UNITS (js/config.js)');
+        if (typeof window.createCamera !== 'function') missing.push('createCamera (js/utils.js)');
+        if (typeof window.World !== 'function') missing.push('World (js/world.js)');
+
+        if (missing.length > 0) {
+            const msg = 'Missing dependencies: ' + missing.join(', ');
+            log.error(msg, { missing });
+            throw new Error(msg);
+        }
     }
 
     function init() {
+        runIntegrationChecks();
+
         const container = document.querySelector('#scene-container');
-        const world = new window.World(container);
-        window.world = world;
-        world.start();
+        if (!container) {
+            log.error('Scene container #scene-container not found');
+            throw new Error('Scene container not found. Check index.html structure.');
+        }
+
+        try {
+            const world = new window.World(container);
+            window.world = world;
+            world.start();
+            log.info('Application started successfully');
+        } catch (err) {
+            log.error('Failed to initialize application', { error: err });
+            throw err;
+        }
     }
 
-    window.onload = init;
+    window.onerror = function(message, source, lineno, colno, error) {
+        log.error('Uncaught error: ' + message, {
+            source,
+            lineno,
+            colno,
+            error: error && error.stack
+        });
+        return false;
+    };
+
+    window.onunhandledrejection = function(event) {
+        log.error('Unhandled promise rejection', { reason: event.reason });
+    };
+
+    window.onload = function() {
+        try {
+            init();
+        } catch (err) {
+            log.error('Application failed to start', { error: err });
+            const container = document.querySelector('#scene-container');
+            if (container) {
+                container.innerHTML = '<div style="padding:2em;color:#fff;font-family:sans-serif;text-align:center;">' +
+                    '<h2>Failed to load</h2>' +
+                    '<p>' + (err.message || 'Unknown error') + '</p>' +
+                    '<p>Check the browser console for details.</p>' +
+                    '</div>';
+            }
+            throw err;
+        }
+    };
 
     // Info button/modal logic
     (function() {

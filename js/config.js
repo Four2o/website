@@ -4,6 +4,9 @@
  */
 (function() {
     'use strict';
+    if (typeof THREE === 'undefined') {
+        throw new Error('Three.js not loaded. Ensure it loads before js/config.js.');
+    }
     window.UNITS = {
         m:  { factor: 1,       symbol: 'm',  system: 'metric', label: 'Meters' },
         cm: { factor: 100,     symbol: 'cm', system: 'metric', label: 'Centimeters' },
