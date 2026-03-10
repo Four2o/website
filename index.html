@@ -10,8 +10,26 @@
     <!-- Mode indicator (always visible) -->
     <div id="mode-indicator" role="status" aria-live="polite" aria-atomic="true">Ready</div>
 
+    <!-- Keyboard Shortcuts Help Button -->
+    <button id="shortcuts-btn" aria-label="Keyboard shortcuts (?)" title="Keyboard shortcuts" class="floating-btn shortcuts-btn">?</button>
+
     <!-- Info Button and Modal -->
-    <button id="info-btn" aria-label="About this build" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;background:#222;color:#fff;font-size:1.5em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;">i</button>
+    <button id="info-btn" aria-label="About this build" class="floating-btn info-btn">i</button>
+    <!-- Shortcuts Modal -->
+    <div id="shortcuts-modal" class="shortcuts-overlay hidden" role="dialog" aria-labelledby="shortcuts-title" aria-modal="true">
+        <div class="shortcuts-modal-content">
+            <h2 id="shortcuts-title">Keyboard Shortcuts</h2>
+            <dl class="shortcuts-list">
+                <dt>Esc</dt><dd>Cancel / Deselect / Close panel</dd>
+                <dt>R</dt><dd>Rotate (when placing or moving)</dd>
+                <dt>Delete / Backspace</dt><dd>Remove selected object or plant</dd>
+                <dt>Ctrl+Z</dt><dd>Undo</dd>
+                <dt>Ctrl+Y</dt><dd>Redo</dd>
+            </dl>
+            <button id="close-shortcuts-modal" class="modal-close-btn">Close</button>
+        </div>
+    </div>
+
     <div id="info-modal" style="display:none;position:fixed;bottom:70px;right:20px;z-index:201;background:rgba(30,30,30,0.98);color:#fff;padding:24px 32px 18px 32px;border-radius:12px;box-shadow:0 4px 24px #000a;min-width:260px;max-width:90vw;">
       <div style="font-size:1.2em;font-weight:bold;margin-bottom:8px;">About This Build</div>
       <div><b>Version:</b> <span id="build-version">1.0.0</span></div>
@@ -76,7 +94,7 @@
     <div id="axis-indicator-container"></div>
 
     <!-- Axis Indicator Toggle Button -->
-    <button id="axis-indicator-toggle-btn" aria-label="Toggle axis indicator" title="Show/Hide Axis Widget (R to rotate, Esc to cancel)" style="position:fixed;bottom:130px;right:20px;z-index:251;width:44px;height:44px;border-radius:50%;background:#222;color:#fff;font-size:1.6em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;display:flex;align-items:center;justify-content:center;">👁️</button>
+    <button id="axis-indicator-toggle-btn" aria-label="Toggle axis indicator" title="Show/Hide Axis Widget (R to rotate, Esc to cancel)" class="floating-btn axis-toggle-btn">👁️</button>
 
 
     <!-- JAVASCRIPT LIBRARIES -->

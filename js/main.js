@@ -91,6 +91,35 @@
         }
     })();
 
+    // Keyboard shortcuts modal
+    (function() {
+        const shortcutsBtn = document.getElementById('shortcuts-btn');
+        const shortcutsModal = document.getElementById('shortcuts-modal');
+        const closeShortcutsBtn = document.getElementById('close-shortcuts-modal');
+        function showShortcuts() {
+            if (shortcutsModal) {
+                shortcutsModal.classList.remove('hidden');
+                closeShortcutsBtn?.focus();
+            }
+        }
+        function hideShortcuts() {
+            if (shortcutsModal) shortcutsModal.classList.add('hidden');
+        }
+        if (shortcutsBtn) shortcutsBtn.addEventListener('click', showShortcuts);
+        if (closeShortcutsBtn) closeShortcutsBtn.addEventListener('click', hideShortcuts);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                if (document.activeElement?.matches('input, textarea')) return;
+                if (shortcutsModal?.classList.contains('hidden')) showShortcuts();
+                else hideShortcuts();
+                e.preventDefault();
+            }
+            if (e.key === 'Escape' && shortcutsModal && !shortcutsModal.classList.contains('hidden')) {
+                hideShortcuts();
+            }
+        });
+    })();
+
     // Axis indicator toggle button logic
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('axis-indicator-toggle-btn');

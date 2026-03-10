@@ -283,6 +283,64 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 #plant-summary-panel th:nth-child(8) { width: 200px; }
 #plant-summary-panel th:nth-child(9) { width: 130px; }
 
+/* Floating action buttons (info, shortcuts, axis toggle) - before media query so overrides work */
+.floating-btn {
+    position: fixed;
+    z-index: 200;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1.2em;
+}
+.floating-btn:hover { background: #333; }
+.floating-btn:focus { outline: 2px solid #6b8e23; outline-offset: 2px; }
+.shortcuts-btn { bottom: 80px; right: 20px; font-size: 1.4em; font-weight: bold; }
+.info-btn { bottom: 20px; right: 20px; font-size: 1.5em; }
+.axis-toggle-btn { bottom: 130px; right: 20px; z-index: 251; font-size: 1.6em; }
+
+/* Shortcuts modal overlay */
+.shortcuts-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.shortcuts-overlay.hidden { display: none !important; }
+.shortcuts-modal-content {
+    background: rgba(30,30,30,0.98);
+    color: #fff;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    min-width: 280px;
+    max-width: 90vw;
+}
+.shortcuts-modal-content h2 { margin-bottom: 16px; font-size: 1.2em; }
+.shortcuts-list { margin: 0 0 20px 0; }
+.shortcuts-list dt { float: left; font-weight: bold; min-width: 140px; margin-bottom: 6px; }
+.shortcuts-list dd { margin: 0 0 6px 140px; color: #bbb; }
+.modal-close-btn {
+    padding: 8px 20px;
+    border: none;
+    background: #444;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    min-height: 44px;
+}
+.modal-close-btn:hover { background: #555; }
 
 #plant-summary-panel h3, #plant-summary-panel p {
     margin-bottom: 8px;
@@ -297,6 +355,17 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 
 /* Responsive adjustments for smaller screens (e.g., mobile) */
 @media (max-width: 768px) {
+    /* Floating buttons: safe-area for notched devices */
+    .floating-btn { right: max(15px, env(safe-area-inset-right)); }
+    .axis-toggle-btn { bottom: max(130px, calc(130px + env(safe-area-inset-bottom))); }
+    .shortcuts-btn { bottom: max(80px, calc(80px + env(safe-area-inset-bottom))); }
+    .info-btn { bottom: max(20px, env(safe-area-inset-bottom)); }
+    /* Mode indicator: avoid overlap on narrow screens */
+    #mode-indicator {
+        max-width: calc(100vw - 30px);
+        padding: 8px 12px;
+        font-size: 11px;
+    }
     #main-controls-container,
     #sidebar-container,
     #right-tool-panel-container {
@@ -323,7 +392,12 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     }
     #sidebar-container { top: calc(15px + 45vh + 15px); max-height: 45vh; }
     #right-tool-panel-container { top: calc(15px + 45vh + 15px); z-index: 101; }
-    #saveLoadPanel { width: calc(100% - 30px); left: 15px; bottom: 15px; }
+    #saveLoadPanel {
+        width: calc(100% - 30px);
+        left: 15px;
+        right: 15px;
+        bottom: max(15px, env(safe-area-inset-bottom));
+    }
     #info-panel { width: calc(100% - 30px); }
     #plant-summary-panel {
         top: calc(15px + 45vh + 15px + 45vh + 15px);

@@ -1260,7 +1260,7 @@
             if (planterObject.userData.isPlanter) this.showPlanterGrid(planterObject);
         }
 
-        deselectObject() {
+        deselectObject(skipInfoPanelHide) {
             this.deselectPlantInPlanter();
             if (!this.selectedObject) return;
             this.resizeHandles.detach();
@@ -1270,8 +1270,8 @@
             }
             if(this.selectionBox) { this.scene.remove(this.selectionBox); disposeObject(this.selectionBox); this.selectionBox = null; }
             this.selectedObject = null;
-            this.dimensionLabelGroup.visible = false; // <-- ADD THIS LINE
-            this.infoPanel.hide();
+            this.dimensionLabelGroup.visible = false;
+            if (!skipInfoPanelHide) this.infoPanel.hide();
             this.hidePlanterGrid();
             this._initRightToolPanel('', true);
         }
@@ -1293,20 +1293,20 @@
         removeSelectedObject() {
             if (!this.selectedObject) return;
             this.resizeHandles.detach();
-            this.infoPanel.show("Object Removed", "The object has been removed.", {text: "OK"});
             this._removeObjectAndCleanup(this.selectedObject);
-            this.deselectObject();
-            this.undoManager.saveState(); // Save state after removal
+            this.deselectObject(true);
+            this.infoPanel.show("Object Removed", "The object has been removed.", {text: "OK"});
+            this.undoManager.saveState();
         }
 
         removeSelectedPlantInPlanter() {
             if (!this.selectedPlantInPlanter || !this.selectedObject) return;
             this._savePlanterStateToHistory();
-            this.infoPanel.show("Plant Removed", "The plant has been removed.", {text: "OK"});
             const planter = this.selectedObject;
             this._removeObjectAndCleanup(this.selectedPlantInPlanter, true);
-            this.selectObject(planter);
-            this.undoManager.saveState(); // Save state after removal
+            this.deselectObject(true);
+            this.infoPanel.show("Plant Removed", "The plant has been removed.", {text: "OK"});
+            this.undoManager.saveState();
         }
 
         enterMoveMode() {
