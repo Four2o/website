@@ -1,4 +1,4 @@
-export const PLANTS = {
+window.PLANTS = {
     vegetables: [
         { name: 'Potatoes', width: 0.4, height: 0.3, depth: 0.4, isScalable: true, defaultGrowth: 0.5, snappable: false, materialProps: { color: 0x5a8e3b, transparent: true, opacity: 0.8 }, light: 'Full Sun', water: 'Medium', yield: 'High (Many tubers)', avgGrowthTime: '90-120 days', sowTime: 'Early Spring', harvestTime: 'Summer-Autumn', typicalSizeStr: '0.4x0.4x0.3m', avgWaterLitersPerWeek: 5 },
         { name: 'Carrots', width: 0.25, height: 0.2, depth: 0.25, isScalable: true, defaultGrowth: 0.5, snappable: false, materialProps: { color: 0x5a8e3b, transparent: true, opacity: 0.8 }, light: 'Full Sun', water: 'Medium', yield: 'Good (Root crop)', avgGrowthTime: '70-90 days', sowTime: 'Early Spring-Late Summer', harvestTime: 'Summer-Autumn', typicalSizeStr: '0.25x0.25x0.2m', avgWaterLitersPerWeek: 3 },
