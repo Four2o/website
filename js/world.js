@@ -177,7 +177,55 @@
             animate();
             this.undoManager.saveState(); // Save initial state
         }
+        _getModeLabel() {
+            switch (this.mode) {
+                case 'PLACEMENT': return this.temporaryPlacementConfig ? `Placing: ${this.temporaryPlacementConfig.name}` : 'Placing';
+                case 'MOVE': return this.objectToMove ? `Moving: ${this.objectToMove.name}` : 'Moving';
+                case 'MOVE_PLANT_IN_PLANTER': return this.objectToMove ? `Moving plant: ${this.objectToMove.name}` : 'Moving plant';
+                case 'PLANT_IN_PLANTER_SELECT_PLANT': return 'Select a plant';
+                case 'PLANT_IN_PLANTER_PLACEMENT': return this.plantToPlaceInPlanterConfig ? `Adding: ${this.plantToPlaceInPlanterConfig.name}` : 'Adding plant';
+                case 'DRAWING_FENCE': return 'Drawing fence';
+                case 'PERIMETER_BUILD': return 'Perimeter fence';
+                default: return this.selectedObject ? `Selected: ${this.selectedObject.name}` : (this.selectedPlantInPlanter ? `Selected: ${this.selectedPlantInPlanter.name}` : 'Ready');
+            }
+        }
+        _updateModeIndicator() {
+            const label = this._getModeLabel();
+            if (this._lastModeLabel === label) return;
+            this._lastModeLabel = label;
+            const el = document.getElementById('mode-indicator');
+            if (el) el.textContent = label;
+        }
+        _buildStructureDetails(dims) {
+            if (!dims) return 'Use the editor panel to modify or delete this object.';
+            const parts = [];
+            const w = dims.width != null ? dims.width : dims.originalWidth;
+            const d = dims.depth != null ? dims.depth : dims.originalDepth;
+            const h = dims.height != null ? dims.height : dims.originalHeight;
+            if (typeof w === 'number' && typeof d === 'number' && typeof h === 'number') {
+                const unitKey = this.controlsPanel?.config?.units || 'm';
+                const conv = (v) => window.convertFromMeters(v, unitKey);
+                const sym = window.UNITS?.[unitKey]?.symbol || 'm';
+                parts.push(`Dimensions: ${conv(w).toFixed(2)}${sym} × ${conv(d).toFixed(2)}${sym} × ${conv(h).toFixed(2)}${sym}`);
+            }
+            if (dims.resizable) parts.push('Resizable');
+            if (dims.snappable) parts.push('Snappable');
+            parts.push('Use the editor panel to modify or delete.');
+            return parts.join('. ');
+        }
+        _buildPlantDetails(dims) {
+            if (!dims) return 'Use the editor panel to modify or delete this plant.';
+            const parts = [];
+            if (dims.light) parts.push(`Light: ${dims.light}`);
+            if (dims.water) parts.push(`Water: ${dims.water}`);
+            if (dims.yield) parts.push(`Yield: ${dims.yield}`);
+            if (dims.typicalSizeStr) parts.push(`Typical size: ${dims.typicalSizeStr}`);
+            if (dims.avgGrowthTime) parts.push(`Growth: ${dims.avgGrowthTime}`);
+            parts.push('Use the editor panel to modify or delete.');
+            return parts.join('. ');
+        }
         update() { 
+            this._updateModeIndicator();
             this.addPlotAxisWidget();
             this.updateLoopLabels(); 
             this._updateDimensionLabelPositions();
@@ -1189,7 +1237,8 @@
             if (object.userData.dimensions?.resizable) {
                 this.resizeHandles.attach(object);
             }
-            this.infoPanel.show(`Selected: ${object.name}`, 'Use the editor panel to modify or delete this object.', { text: 'Delete', onClick: () => this.removeSelectedObject() });
+            const details = this._buildStructureDetails(object.userData.dimensions);
+            this.infoPanel.show(`Selected: ${object.name}`, details, { text: 'Delete', onClick: () => this.removeSelectedObject() });
             this.createObjectEditor();
             if (object.userData.isPlanter) this.showPlanterGrid(object);
         }
@@ -1205,7 +1254,8 @@
             this.scene.add(this.plantSelectionBox); 
             this.plantSelectionBoxUpdater = { update: () => this.plantSelectionBox.update() };
             this.loop.updatables.push(this.plantSelectionBoxUpdater);
-            this.infoPanel.show(`Selected: ${plantObject.name}`, 'Use the editor panel to modify or delete this plant.', { text: 'Delete', onClick: () => this.removeSelectedPlantInPlanter() });
+            const details = this._buildPlantDetails(plantObject.userData.dimensions);
+            this.infoPanel.show(`Selected: ${plantObject.name}`, details, { text: 'Delete', onClick: () => this.removeSelectedPlantInPlanter() });
             this.createPlantEditor();
             if (planterObject.userData.isPlanter) this.showPlanterGrid(planterObject);
         }

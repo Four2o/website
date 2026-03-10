@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
+    <!-- Mode indicator (always visible) -->
+    <div id="mode-indicator" role="status" aria-live="polite" aria-atomic="true">Ready</div>
+
     <!-- Info Button and Modal -->
-    <button id="info-btn" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;background:#222;color:#fff;font-size:1.5em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;">i</button>
+    <button id="info-btn" aria-label="About this build" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;background:#222;color:#fff;font-size:1.5em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;">i</button>
     <div id="info-modal" style="display:none;position:fixed;bottom:70px;right:20px;z-index:201;background:rgba(30,30,30,0.98);color:#fff;padding:24px 32px 18px 32px;border-radius:12px;box-shadow:0 4px 24px #000a;min-width:260px;max-width:90vw;">
       <div style="font-size:1.2em;font-weight:bold;margin-bottom:8px;">About This Build</div>
       <div><b>Version:</b> <span id="build-version">1.0.0</span></div>
       <div><b>Builder:</b> Four20 (with AI help)</div>
       <div><b>Build Date:</b> <span id="build-date">2024-06-09</span></div>
-      <button id="close-info-modal" style="margin-top:16px;padding:6px 18px;border:none;background:#444;color:#fff;border-radius:6px;cursor:pointer;">Close</button>
+      <button id="close-info-modal" aria-label="Close about modal" style="margin-top:16px;padding:6px 18px;border:none;background:#444;color:#fff;border-radius:6px;cursor:pointer;">Close</button>
     </div>
 
     <!-- HTML STRUCTURE -->
@@ -38,7 +41,7 @@
     </div>
 
     <!-- Info Panel (for messages/alerts) -->
-    <div id="info-panel" class="ui-panel hidden">
+    <div id="info-panel" class="ui-panel hidden" role="dialog" aria-labelledby="info-title" aria-describedby="info-details">
         <h3 id="info-title"></h3>
         <p id="info-details"></p>
         <button id="info-button">Action</button>
@@ -49,8 +52,8 @@
         <h3>Layout Tools</h3>
         <!-- NEW: Undo/Redo buttons in a grid -->
         <div class="button-grid">
-            <button id="undoBtn">↩️ Undo</button>
-            <button id="redoBtn">↪️ Redo</button>
+            <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
+            <button id="redoBtn" aria-label="Redo (Ctrl+Y)">↪️ Redo</button>
         </div>
         <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 6px 0;">
         <button id="saveLayoutBtn">💾 Save Layout</button>
@@ -73,7 +76,7 @@
     <div id="axis-indicator-container"></div>
 
     <!-- Axis Indicator Toggle Button -->
-    <button id="axis-indicator-toggle-btn" title="Show/Hide Axis Widget" style="position:fixed;bottom:130px;right:20px;z-index:251;width:44px;height:44px;border-radius:50%;background:#222;color:#fff;font-size:1.6em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;display:flex;align-items:center;justify-content:center;">👁️</button>
+    <button id="axis-indicator-toggle-btn" aria-label="Toggle axis indicator" title="Show/Hide Axis Widget (R to rotate, Esc to cancel)" style="position:fixed;bottom:130px;right:20px;z-index:251;width:44px;height:44px;border-radius:50%;background:#222;color:#fff;font-size:1.6em;border:none;box-shadow:0 2px 8px #0006;cursor:pointer;display:flex;align-items:center;justify-content:center;">👁️</button>
 
 
     <!-- JAVASCRIPT LIBRARIES -->

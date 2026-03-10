@@ -278,6 +278,7 @@
             this.button = document.querySelector('#info-button');
             this.button.onclick = null;
             this.button.addEventListener('click', () => this.hide());
+            this._boundKeyHandler = (e) => { if (e.key === 'Escape') this.hide(); };
         }
         show(title, details, buttonConfig) {
             this.title.textContent = title;
@@ -285,16 +286,23 @@
             this.button.onclick = null;
             if (buttonConfig && buttonConfig.onClick) {
                 this.button.textContent = buttonConfig.text;
+                this.button.setAttribute('aria-label', buttonConfig.text);
                 this.button.style.display = 'inline-block';
                 this.button.onclick = buttonConfig.onClick;
             } else {
                 this.button.textContent = 'OK';
+                this.button.setAttribute('aria-label', 'Close');
                 this.button.style.display = 'inline-block';
                 this.button.onclick = () => this.hide();
             }
             this.panel.classList.remove('hidden');
+            document.addEventListener('keydown', this._boundKeyHandler);
+            this.button.focus();
         }
-        hide() { this.panel.classList.add('hidden'); }
+        hide() {
+            this.panel.classList.add('hidden');
+            document.removeEventListener('keydown', this._boundKeyHandler);
+        }
     }
 
     window.UndoManager = UndoManager;
