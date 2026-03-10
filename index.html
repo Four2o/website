@@ -81,6 +81,7 @@
     <script src="https://unpkg.com/three@0.139.2/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.0.8/dist/tweakpane.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <script src="js/plants.js"></script>
 
     <!-- APPLICATION JAVASCRIPT -->
     <script>
@@ -145,6 +146,9 @@
 
 */
         const PLANTS = window.PLANTS;
+        if (!PLANTS || typeof PLANTS !== 'object' || Object.keys(PLANTS).length === 0) {
+            throw new Error('PLANTS data failed to load. Ensure js/plants.js is loaded before the main script.');
+        }
         const UNITS = {
             m:  { factor: 1,       symbol: 'm',  system: 'metric', label: 'Meters' },
             cm: { factor: 100,     symbol: 'cm', system: 'metric', label: 'Centimeters' },
