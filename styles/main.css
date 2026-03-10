@@ -222,13 +222,15 @@ html, body {
     font-weight: 600 !important;
     letter-spacing: 0.05em !important;
 }
-.tp-fldv { margin-bottom: 12px !important; }
+.tp-fldv { margin-bottom: 16px !important; }
 .tp-fldv:last-child { margin-bottom: 0 !important; }
-.tp-lblv { margin-bottom: 10px !important; }
+.tp-fldv_t { padding: 6px 0 8px 0 !important; }
+.tp-lblv { margin-bottom: 12px !important; }
 .tp-lblv:last-child { margin-bottom: 0 !important; }
-.tp-ptv { margin-bottom: 10px !important; }
 .tp-lblv_l, .tp-sldv_t, .tp-txtv_i { color: var(--text-primary) !important; font-size: 13px !important; }
-.tp-btn {
+/* Tweakpane 3 uses tp-btnv (wrapper) and tp-btnv_b (actual button) */
+.tp-btnv,
+.tp-btnv_b {
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid var(--border-muted) !important;
     border-radius: var(--radius-sm) !important;
@@ -240,10 +242,11 @@ html, body {
     min-height: 40px !important;
     transition: background 0.2s ease !important;
 }
-.tp-btn:hover { background: rgba(255, 255, 255, 0.14) !important; }
+.tp-btnv_b:hover,
+.tp-btnv:hover { background: rgba(255, 255, 255, 0.14) !important; }
 /* Sidebar item buttons – more spacing */
-#sidebar-pane-container .tp-btn {
-    margin-bottom: 6px !important;
+#sidebar-pane-container .tp-btnv {
+    margin-bottom: 8px !important;
 }
 #sidebar-pane-container .tp-fldv_t { padding: 8px 0 4px 0 !important; }
 
@@ -568,7 +571,8 @@ html, body {
         padding: 10px 14px;
     }
     .ui-panel button,
-    .ui-panel .tp-btn {
+    .ui-panel .tp-btnv,
+    .ui-panel .tp-btnv_b {
         min-height: 44px;
         padding: 10px 14px;
     }
