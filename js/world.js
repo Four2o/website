@@ -364,6 +364,20 @@
             document.getElementById('clearAllBtn').addEventListener('click', () => this.confirmAndClearAll());
             document.getElementById('perimeterFenceBtn').addEventListener('click', () => this.togglePerimeterPanel());
             document.getElementById('exportPlantSummaryBtn').addEventListener('click', () => this.exportPlantSummary());
+            const templateSelect = document.getElementById('templateSelect');
+            if (templateSelect && window.LAYOUT_TEMPLATES) {
+                window.LAYOUT_TEMPLATES.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.id;
+                    opt.textContent = t.name;
+                    templateSelect.appendChild(opt);
+                });
+                templateSelect.addEventListener('change', (e) => {
+                    const id = e.target.value;
+                    if (id) this.loadTemplate(id);
+                    e.target.value = '';
+                });
+            }
             // --- END: Added Event Listeners ---
         }
 
@@ -1299,6 +1313,87 @@
             this.undoManager.saveState();
         }
 
+        duplicateSelectedObject() {
+            if (!this.selectedObject) return;
+            const obj = this.selectedObject;
+            const offset = new THREE.Vector3(1.2, 0, 0).applyEuler(new THREE.Euler(0, obj.rotation.y, 0));
+            const newPos = obj.position.clone().add(offset);
+            const itemData = {
+                name: obj.name,
+                pos: newPos.toArray(),
+                rotY: obj.rotation.y,
+                dims: { ...obj.userData.dimensions },
+                plants: obj.userData.plants?.map(p => ({
+                    name: p.name,
+                    localPos: p.position.toArray(),
+                    rotY: p.rotation.y,
+                    dims: { ...p.userData.dimensions }
+                }))
+            };
+            const originalDef = STRUCTURES.find(s => s.name === itemData.name) || Object.values(PLANTS).flat().find(p => p.name === itemData.name);
+            if (!originalDef) return;
+            const itemDimensions = {
+                ...originalDef,
+                ...itemData.dims,
+                originalWidth: itemData.dims.originalWidth ?? originalDef.width,
+                originalDepth: itemData.dims.originalDepth ?? originalDef.depth,
+                originalHeight: itemData.dims.originalHeight ?? originalDef.height,
+            };
+            const newObject = this._createAndPlaceObject(itemDimensions, new THREE.Vector3().fromArray(itemData.pos), itemData.rotY);
+            if (itemDimensions.isHollow && itemData.plants?.length) {
+                newObject.userData.plants = [];
+                this._rebuildPlanterPlantsFromData(newObject, itemData.plants);
+            }
+            this.deselectObject();
+            this.selectObject(newObject);
+            this.undoManager.saveState();
+            this.infoPanel.show("Duplicated", `${obj.name} has been copied.`, { text: "OK" });
+        }
+
+        copySelectedToClipboard() {
+            if (!this.selectedObject) return;
+            const obj = this.selectedObject;
+            this._clipboard = {
+                name: obj.name,
+                pos: obj.position.toArray(),
+                rotY: obj.rotation.y,
+                dims: { ...obj.userData.dimensions },
+                plants: obj.userData.plants?.map(p => ({
+                    name: p.name,
+                    localPos: p.position.toArray(),
+                    rotY: p.rotation.y,
+                    dims: { ...p.userData.dimensions }
+                }))
+            };
+            if (typeof window.showToast === 'function') window.showToast('Copied', 1500);
+        }
+
+        pasteFromClipboard() {
+            if (!this._clipboard) return;
+            const itemData = this._clipboard;
+            const offset = new THREE.Vector3(1.2, 0, 0).applyEuler(new THREE.Euler(0, itemData.rotY, 0));
+            const basePos = new THREE.Vector3().fromArray(itemData.pos);
+            const newPos = basePos.clone().add(offset);
+            const originalDef = STRUCTURES.find(s => s.name === itemData.name) || Object.values(PLANTS).flat().find(p => p.name === itemData.name);
+            if (!originalDef) return;
+            const itemDimensions = {
+                ...originalDef,
+                ...itemData.dims,
+                originalWidth: itemData.dims.originalWidth ?? originalDef.width,
+                originalDepth: itemData.dims.originalDepth ?? originalDef.depth,
+                originalHeight: itemData.dims.originalHeight ?? originalDef.height,
+            };
+            const newObject = this._createAndPlaceObject(itemDimensions, newPos, itemData.rotY);
+            if (itemDimensions.isHollow && itemData.plants?.length) {
+                newObject.userData.plants = [];
+                this._rebuildPlanterPlantsFromData(newObject, itemData.plants);
+            }
+            this.deselectObject();
+            this.selectObject(newObject);
+            this.undoManager.saveState();
+            if (typeof window.showToast === 'function') window.showToast('Pasted', 1500);
+        }
+
         removeSelectedPlantInPlanter() {
             if (!this.selectedPlantInPlanter || !this.selectedObject) return;
             this._savePlanterStateToHistory();
@@ -1431,6 +1526,7 @@
         createObjectEditor() {
             const pane = this._initRightToolPanel(`Edit ${this.selectedObject.name}`);
             if (!pane) return;
+            pane.addButton({ title: 'Duplicate' }).on('click', () => this.duplicateSelectedObject());
             pane.addButton({ title: 'Move Object' }).on('click', () => this.enterMoveMode());
             pane.addButton({ title: 'Rotate Object' }).on('click', () => {
                 if (this.selectedObject) {
@@ -1574,7 +1670,8 @@
             this.addPopulateOptions(pane);
             this.updatePlantInPlanterPreview();
             this.mode = 'PLANT_IN_PLANTER_PLACEMENT';
-            this.infoPanel.show(`Adding ${plantDef.name}`, 'Move over the planter soil, then click to place. Press R to rotate. Esc to cancel or choose a different plant.', null);
+            const spacingHint = plantDef.typicalSizeStr ? `Recommended spacing: ${plantDef.typicalSizeStr.split('x')[0]}m between plants. ` : '';
+            this.infoPanel.show(`Adding ${plantDef.name}`, spacingHint + 'Move over the planter soil, then click to place. Press R to rotate. Esc to cancel or choose a different plant.', null);
         }
 
         addPlanterActionButtons(pane) {
@@ -1868,9 +1965,38 @@
                 this.plantPlacementPreview.updateMatrixWorld(true);
                 const ignore = this.mode === 'MOVE_PLANT_IN_PLANTER' ? this.objectToMove : null;
                 this.isPlacementValid = !this.isOverlappingInPlanter(this.plantPlacementPreview, this.activePlanter, ignore);
-                const color = this.isPlacementValid ? this.validPlacementColor : this.invalidPlacementColor;
+                let color = this.isPlacementValid ? this.validPlacementColor : this.invalidPlacementColor;
+                if (this.isPlacementValid && this.mode === 'PLANT_IN_PLANTER_PLACEMENT' && this.plantToPlaceInPlanterConfig) {
+                    const hint = this._getCompanionHint(this.plantToPlaceInPlanterConfig.name, snappedPos);
+                    if (hint && hint.startsWith('Good')) color = new THREE.Color(0x2ecc71);
+                }
                 this.plantPlacementPreview.traverse(c => { if (c.isMesh) c.material.color.set(color); });
+                if (this.mode === 'PLANT_IN_PLANTER_PLACEMENT' && this.isPlacementValid && this.plantToPlaceInPlanterConfig) {
+                    const hint = this._getCompanionHint(this.plantToPlaceInPlanterConfig.name, snappedPos);
+                    const base = (this.plantToPlaceInPlanterConfig.typicalSizeStr ? `Spacing: ${this.plantToPlaceInPlanterConfig.typicalSizeStr.split('x')[0]}m. ` : '') + 'Click to place. R to rotate. Esc to cancel.';
+                    this.infoPanel.details.textContent = hint ? `${hint} — ${base}` : base;
+                }
             } else { this.plantPlacementPreview.visible = false; }
+        }
+
+        _getCompanionHint(plantName, localPos) {
+            const cp = window.COMPANION_PLANTING;
+            if (!cp) return '';
+            const plants = this.activePlanter?.userData?.plants || [];
+            const nearbyRadius = 0.6;
+            const nearby = plants.filter(p => {
+                const dist = p.position.distanceTo(localPos);
+                return dist > 0.01 && dist < nearbyRadius;
+            });
+            if (nearby.length === 0) return '';
+            const good = cp.companions?.[plantName] || [];
+            const bad = cp.antagonistic?.[plantName] || [];
+            const goodNearby = nearby.filter(p => good.includes(p.name));
+            const badNearby = nearby.filter(p => bad.includes(p.name));
+            const parts = [];
+            if (badNearby.length) parts.push(`Avoid: ${badNearby.map(p => p.name).join(', ')} nearby`);
+            if (goodNearby.length) parts.push(`Good companion: ${goodNearby.map(p => p.name).join(', ')}`);
+            return parts.join('. ') || '';
         }
 
 
@@ -2312,6 +2438,14 @@
                 if (event.key.toLowerCase() === 'y') {
                     event.preventDefault();
                     this.undoManager.redo();
+                }
+                if (event.key.toLowerCase() === 'c') {
+                    event.preventDefault();
+                    this.copySelectedToClipboard();
+                }
+                if (event.key.toLowerCase() === 'v') {
+                    event.preventDefault();
+                    this.pasteFromClipboard();
                 }
             }
             if (event.key.toLowerCase() === 'r') {
@@ -2764,6 +2898,23 @@
             };
         }
         saveLayout() { localStorage.setItem('allotmentLayout', JSON.stringify(this.getCurrentLayoutData())); this.infoPanel.show("Layout Saved", "Saved to browser storage.", {text: "OK"}); }
+
+        loadTemplate(templateId) {
+            const template = window.LAYOUT_TEMPLATES?.find(t => t.id === templateId);
+            if (!template) return;
+            const saveData = {
+                objects: template.objects.map(o => ({
+                    name: o.name,
+                    pos: Array.isArray(o.pos) ? o.pos : [o.pos?.x ?? 0, o.pos?.y ?? 0, o.pos?.z ?? 0],
+                    rotY: o.rotY ?? 0,
+                    dims: o.dims || {},
+                    plants: o.plants || []
+                })),
+                config: { ...this.controlsPanel.config, ...template.config },
+                version: "1.2"
+            };
+            this.rebuildSceneFromData(saveData, `Template: ${template.name}`);
+        }
         loadLayout() { const data = localStorage.getItem('allotmentLayout'); if(data) this.rebuildSceneFromData(JSON.parse(data), "Loaded"); else this.infoPanel.show("Load Failed", "No layout found.", {text: "OK"}); }
         exportLayout() { const blob = new Blob([JSON.stringify(this.getCurrentLayoutData(), null, 2)], { type: "application/json" }); const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="allotment-layout.json"; a.click(); a.remove(); this.infoPanel.show("Export Complete", "Layout saved.", {text: "OK"}); }
 

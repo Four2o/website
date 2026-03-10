@@ -31,6 +31,8 @@
                 <dt>Delete / Backspace</dt><dd>Remove selected object or plant</dd>
                 <dt>Ctrl+Z</dt><dd>Undo</dd>
                 <dt>Ctrl+Y</dt><dd>Redo</dd>
+                <dt>Ctrl+C</dt><dd>Copy selected object</dd>
+                <dt>Ctrl+V</dt><dd>Paste copied object</dd>
             </dl>
             <button id="close-shortcuts-modal" class="modal-close-btn">Close</button>
         </div>
@@ -90,6 +92,10 @@
             <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
             <button id="redoBtn" aria-label="Redo (Ctrl+Y)">↪️ Redo</button>
         </div>
+        <h3>Templates</h3>
+        <select id="templateSelect" aria-label="Start from template">
+            <option value="">Start from template...</option>
+        </select>
         <h3>Save &amp; Load</h3>
         <button id="saveLayoutBtn">💾 Save to browser</button>
         <button id="loadLayoutBtn">📂 Load from browser</button>
@@ -121,6 +127,8 @@
     <script src="js/logger.js"></script>
     <script src="js/plants.js"></script>
     <script src="js/structures.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/companions.js"></script>
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/classes.js"></script>
