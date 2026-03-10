@@ -9,7 +9,7 @@
 /* Same width (240px) across Settings, Add Items, Save/Load */
 #main-controls-container {
     width: 240px !important;
-    max-height: calc(100vh - 30px - 380px) !important;
+    max-height: calc(100vh - 30px - 500px) !important;
 }
 #sidebar-container { width: 240px !important; }
 #right-tool-panel-container {

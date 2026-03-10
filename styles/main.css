@@ -112,7 +112,7 @@ html, body {
     top: 15px;
     left: 15px;
     width: 240px;
-    max-height: calc(100vh - 30px - 380px);
+    max-height: calc(100vh - 30px - 500px);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 100;
@@ -291,7 +291,7 @@ html, body {
     bottom: 15px;
     left: 15px;
     width: 240px;
-    z-index: 99;
+    z-index: 101;
     padding: 12px 14px;
 }
 #saveLoadPanel h3 {
