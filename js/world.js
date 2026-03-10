@@ -1442,7 +1442,7 @@
             });
             pane.addButton({ title: 'Delete Object' }).on('click', () => this.removeSelectedObject());
             if (this.selectedObject?.userData.isPlanter) {
-                const gridFolder = pane.addFolder({ title: 'Soil Grid', expanded: true });
+                const gridFolder = pane.addFolder({ title: 'Planter grid', expanded: true });
                 gridFolder.addInput(this.selectedObject.userData.dimensions, 'soilRows', { label: 'Rows', min: 1, max: 10, step: 1 }).on('change', () => this.updatePlanterGrid(this.selectedObject));
                 gridFolder.addInput(this.selectedObject.userData.dimensions, 'soilCols', { label: 'Columns', min: 1, max: 10, step: 1 }).on('change', () => this.updatePlanterGrid(this.selectedObject));
                 gridFolder.addButton({ title: 'Add Plant' }).on('click', () => this.enterPlantInPlanterSelectionMode(this.selectedObject));
@@ -1514,7 +1514,7 @@
             }
 
             if (itemDef.isHollow) {
-                pane.addInput(configProxy, 'wallThickness', { label: 'Wall Thick', step: 0.01, min: 0.01 }).on('change', onUpdate);
+                pane.addInput(configProxy, 'wallThickness', { label: 'Wall thickness', step: 0.01, min: 0.01 }).on('change', onUpdate);
                 pane.addInput(configProxy, 'soilHeight', { label: 'Soil Height', step: 0.01, min: 0 }).on('change', onUpdate);
                 pane.addInput(configProxy, 'soilRows', { label: 'Rows', min: 1, max: 10, step: 1 });
                 pane.addInput(configProxy, 'soilCols', { label: 'Columns', min: 1, max: 10, step: 1 });

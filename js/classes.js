@@ -163,7 +163,7 @@
     class ControlsPanel {
         constructor(world) {
             this.world = world;
-            this.pane = new Tweakpane.Pane({ title: 'Allotment Controls', container: document.querySelector('#main-controls-container') });
+            this.pane = new Tweakpane.Pane({ title: 'Settings', container: document.querySelector('#main-controls-container') });
             this.config = {
                 units: 'm', width: 10, length: 15,
                 gridVisible: true, rulersVisible: true, snapToGrid: true,
@@ -172,36 +172,39 @@
                 showLabels: false, isometricZoom: 1.0, timeOfDay: 12.0, showAxisIndicator: true,
                 performanceMode: false,
             };
-            const plotFolder = this.pane.addFolder({ title: 'Plot Dimensions' });
+            const plotFolder = this.pane.addFolder({ title: 'Plot size', expanded: true });
             const unitOptions = Object.keys(UNITS).reduce((acc, key) => { acc[UNITS[key].label] = key; return acc; }, {});
-            plotFolder.addInput(this.config, 'units', { options: unitOptions }).on('change', (ev) => this.onUnitsChange(ev.value));
-            this.widthInput = plotFolder.addInput(this.config, 'width', { label: 'Width (m)', min: 1, max: 100, step: 1 });
-            this.lengthInput = plotFolder.addInput(this.config, 'length', { label: 'Length (m)', min: 1, max: 100, step: 1 });
+            plotFolder.addInput(this.config, 'units', { label: 'Units', options: unitOptions }).on('change', (ev) => this.onUnitsChange(ev.value));
+            this.widthInput = plotFolder.addInput(this.config, 'width', { label: 'Width', min: 1, max: 100, step: 1 });
+            this.lengthInput = plotFolder.addInput(this.config, 'length', { label: 'Length', min: 1, max: 100, step: 1 });
             this.widthInput.on('change', () => this.updatePlotFromUI()); this.lengthInput.on('change', () => this.updatePlotFromUI());
-            this.viewFolder = this.pane.addFolder({ title: 'View Options' });
-            this.subdivisionInput = null; this.updateSubdivisionInput();
-            this.viewFolder.addInput(this.config, 'timeOfDay', { label: 'Time of Day', min: 5, max: 21, step: 0.1 }).on('change', (ev) => this.world.updateSunPosition(ev.value));
-            this.viewFolder.addInput(this.config, 'gridVisible').on('change', (ev) => this.world.setGridVisible(ev.value));
-            this.viewFolder.addInput(this.config, 'gridOpacity', { min: 0, max: 1, step: 0.05 }).on('change', (ev) => this.world.setGridOpacity(ev.value));
-            this.viewFolder.addInput(this.config, 'rulersVisible').on('change', (ev) => this.world.setRulersVisible(ev.value));
-            this.viewFolder.addInput(this.config, 'rulerOpacity', { min: 0, max: 1, step: 0.05 }).on('change', (ev) => this.world.setRulerOpacity(ev.value));
-            this.viewFolder.addInput(this.config, 'darkMode').on('change', (ev) => this.world.setTheme(ev.value));
+            this.interactionFolder = this.pane.addFolder({ title: 'Placement', expanded: true });
+            this.interactionFolder.addInput(this.config, 'snapToGrid', { label: 'Snap to grid' });
+            this.subdivisionInput = null;
+            this.updateSubdivisionInput();
+            this.viewFolder = this.pane.addFolder({ title: 'Display', expanded: true });
+            this.viewFolder.addInput(this.config, 'timeOfDay', { label: 'Time of day', min: 5, max: 21, step: 0.1 }).on('change', (ev) => this.world.updateSunPosition(ev.value));
+            this.viewFolder.addInput(this.config, 'darkMode', { label: 'Dark theme' }).on('change', (ev) => this.world.setTheme(ev.value));
+            this.viewFolder.addInput(this.config, 'gridVisible', { label: 'Show grid' }).on('change', (ev) => this.world.setGridVisible(ev.value));
+            this.viewFolder.addInput(this.config, 'gridOpacity', { label: 'Grid opacity', min: 0, max: 1, step: 0.05 }).on('change', (ev) => this.world.setGridOpacity(ev.value));
+            this.viewFolder.addInput(this.config, 'rulersVisible', { label: 'Show rulers' }).on('change', (ev) => this.world.setRulersVisible(ev.value));
+            this.viewFolder.addInput(this.config, 'rulerOpacity', { label: 'Ruler opacity', min: 0, max: 1, step: 0.05 }).on('change', (ev) => this.world.setRulerOpacity(ev.value));
             this.viewFolder.addInput(this.config, 'showLabels', { label: 'Show Labels' }).on('change', (ev) => this.world.updateAllObjectLabelsVisibility());
-            this.viewFolder.addInput(this.config, 'showAxisIndicator', { label: 'Show Axis Indicator' }).on('change', (ev) => this.world.toggleAxisIndicator(ev.value));
-            this.viewFolder.addInput(this.config, 'performanceMode', { label: 'Performance Mode' }).on('change', (ev) => this.world.setPerformanceMode(ev.value));
-            this.viewFolder.addButton({ title: 'Plant Summary' }).on('click', () => this.world.togglePlantSummaryPanel());
-            this.viewFolder.addButton({ title: 'Top-Down View' }).on('click', () => this.world.goToTopView());
-            this.viewFolder.addButton({ title: 'Isometric View' }).on('click', () => this.world.goToIsometricView());
-            this.viewFolder.addInput(this.config, 'isometricZoom', { label: 'Isometric Zoom', min: 0.1, max: 5.0, step: 0.1 }).on('change', () => this.world._updateIsometricCameraPosition());
-            this.viewFolder.addInput(this.config, 'viewLocked', { label: 'Lock View' }).on('change', (ev) => this.world.setViewLock(ev.value));
-            this.pane.addFolder({ title: 'Interaction' }).addInput(this.config, 'snapToGrid');
+            this.viewFolder.addInput(this.config, 'showAxisIndicator', { label: 'Show compass' }).on('change', (ev) => this.world.toggleAxisIndicator(ev.value));
+            this.viewFolder.addButton({ title: 'View from above' }).on('click', () => this.world.goToTopView());
+            this.viewFolder.addButton({ title: 'Isometric view' }).on('click', () => this.world.goToIsometricView());
+            this.viewFolder.addInput(this.config, 'isometricZoom', { label: 'Isometric zoom', min: 0.1, max: 5.0, step: 0.1 }).on('change', () => this.world._updateIsometricCameraPosition());
+            this.viewFolder.addInput(this.config, 'viewLocked', { label: 'Lock camera' }).on('change', (ev) => this.world.setViewLock(ev.value));
+            this.viewFolder.addButton({ title: 'Plant summary' }).on('click', () => this.world.togglePlantSummaryPanel());
+            const advancedFolder = this.pane.addFolder({ title: 'Advanced', expanded: false });
+            advancedFolder.addInput(this.config, 'performanceMode', { label: 'Performance mode' }).on('change', (ev) => this.world.setPerformanceMode(ev.value));
         }
         updateSubdivisionInput() {
             if (this.subdivisionInput) this.subdivisionInput.dispose();
             const currentSystem = UNITS[this.config.units].system;
             const newOptions = currentSystem === 'metric' ? METRIC_SUBDIVISIONS : IMPERIAL_SUBDIVISIONS;
             if (!Object.values(newOptions).includes(this.config.subdivisions)) this.config.subdivisions = currentSystem === 'metric' ? 1.0 : 0.3048;
-            this.subdivisionInput = this.viewFolder.addInput(this.config, 'subdivisions', { label: 'Subdivisions', options: newOptions });
+            this.subdivisionInput = this.interactionFolder.addInput(this.config, 'subdivisions', { label: 'Grid size', options: newOptions });
             this.subdivisionInput.on('change', () => this.updatePlotFromUI());
             this.pane.refresh();
         }
@@ -237,11 +240,11 @@
             this.searchInput = document.createElement('input');
             this.searchInput.id = 'sidebar-search-input';
             this.searchInput.type = 'text';
-            this.searchInput.placeholder = 'Search...';
+            this.searchInput.placeholder = 'Search items...';
             sidebarContainer.prepend(this.searchInput);
             this.paneContainer = document.querySelector('#sidebar-pane-container');
             this.pane = new Tweakpane.Pane({ container: this.paneContainer });
-            this.pane.title = "Placeables";
+            this.pane.title = "Add items";
             this.allButtons = [];
             this.allFolders = [];
             const structuresFolder = this.pane.addFolder({ title: 'Structures', expanded: true });
@@ -252,7 +255,7 @@
                 this.allButtons.push({ element: button.element, title: item.name.toLowerCase(), folder: structuresFolder });
             });
             for (const category in PLANTS) {
-                const categoryFolder = this.pane.addFolder({ title: category.charAt(0).toUpperCase() + category.slice(1), expanded: false });
+                const categoryFolder = this.pane.addFolder({ title: category.charAt(0).toUpperCase() + category.slice(1), expanded: true });
                 this.allFolders.push(categoryFolder);
                 PLANTS[category].forEach(plantDef => {
                     const button = categoryFolder.addButton({ title: plantDef.name });
