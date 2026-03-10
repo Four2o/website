@@ -107,12 +107,12 @@ html, body {
     display: block; /* Default display for most UI panels */
 }
 
-/* Main controls container */
+/* Main controls container – same width as Save/Load */
 #main-controls-container {
     top: 15px;
     left: 15px;
-    width: 300px;
-    max-height: calc(100vh - 30px - 280px);
+    width: 240px;
+    max-height: calc(100vh - 30px - 380px);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 100;
@@ -132,8 +132,8 @@ html, body {
 /* Right Tool Panel */
 #right-tool-panel-container {
     top: 15px;
-    right: 255px;
-    width: 210px;
+    right: 265px;
+    width: 220px;
     max-height: calc(100vh - 30px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -158,7 +158,7 @@ html, body {
 #sidebar-container {
     top: 15px;
     right: 15px;
-    width: 260px;
+    width: 240px;
     max-height: calc(100vh - 30px);
     display: flex;
     flex-direction: column;
@@ -174,7 +174,7 @@ html, body {
     margin-bottom: 8px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-muted);
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.06);
     color: var(--text-primary);
     font-size: 14px;
     font-family: inherit;
@@ -209,46 +209,52 @@ html, body {
     -webkit-backdrop-filter: none;
 }
 
-/* Tweakpane overrides – consistent spacing and hierarchy */
+/* Tweakpane overrides – match Save/Load panel style */
 .tp-dfwv {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
-.tp-rotv { margin-bottom: 4px !important; }
-.tp-rotv_t {
-    color: var(--text-secondary) !important;
-    font-size: 11px !important;
+/* Section headers – match #saveLoadPanel h3 */
+.tp-rotv_t,
+.tp-fldv_t {
+    font-size: 10px !important;
     font-weight: 600 !important;
-    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: var(--text-muted) !important;
+    margin: 12px 0 8px 0 !important;
+    padding: 0 0 6px 0 !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
 }
-.tp-fldv { margin-bottom: 16px !important; }
+.tp-rotv_t:first-child { margin-top: 0 !important; }
+.tp-fldv_t { margin: 12px 0 8px 0 !important; }
+.tp-fldv { margin-bottom: 12px !important; }
 .tp-fldv:last-child { margin-bottom: 0 !important; }
-.tp-fldv_t { padding: 6px 0 8px 0 !important; }
-.tp-lblv { margin-bottom: 12px !important; }
+.tp-lblv { margin-bottom: 8px !important; }
 .tp-lblv:last-child { margin-bottom: 0 !important; }
 .tp-lblv_l, .tp-sldv_t, .tp-txtv_i { color: var(--text-primary) !important; font-size: 13px !important; }
-/* Tweakpane 3 uses tp-btnv (wrapper) and tp-btnv_b (actual button) */
+/* Buttons – match #saveLoadPanel button exactly */
 .tp-btnv,
 .tp-btnv_b {
-    background: rgba(255, 255, 255, 0.08) !important;
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid var(--border-muted) !important;
     border-radius: var(--radius-sm) !important;
     color: var(--text-primary) !important;
     font-family: var(--font-sans) !important;
     font-weight: 500 !important;
-    font-size: 12px !important;
-    padding: 6px 10px !important;
-    min-height: 32px !important;
-    transition: background 0.2s ease !important;
+    font-size: 13px !important;
+    padding: 8px 10px !important;
+    min-height: 36px !important;
+    transition: background 0.2s ease, border-color 0.2s ease !important;
 }
 .tp-btnv_b:hover,
-.tp-btnv:hover { background: rgba(255, 255, 255, 0.14) !important; }
-/* Sidebar item buttons – more spacing */
-#sidebar-pane-container .tp-btnv {
-    margin-bottom: 4px !important;
+.tp-btnv:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: var(--border-muted) !important;
 }
-#sidebar-pane-container .tp-fldv_t { padding: 4px 0 2px 0 !important; }
+#sidebar-pane-container .tp-btnv { margin-bottom: 6px !important; }
 
 /* Info Panel */
 #info-panel {
