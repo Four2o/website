@@ -1356,6 +1356,7 @@
                 this.loop.updatables = this.loop.updatables.filter(u => u !== this.debugBoxHelperUpdater);
                 this.debugBoxHelperUpdater = null;
             }
+            this._hideSnapMarker();
             this.mode = 'IDLE';
             this.objectToMove = null;
             this.setViewLock(this.controlsPanel.config.viewLocked);
@@ -1836,17 +1837,19 @@
                 this.placementPreview.position.copy(snapResult.position);
                 this.placementPreview.position.y = 0; // Prevent clipping into the ground
                 this.placementPreview.rotation.y = snapResult.rotation;
-                // Update the ongoing placement rotation in case the edge snap changed it
                 this.placementRotation = snapResult.rotation;
                 this.placementPreview.visible = true;
-                if (this.debugBoxHelper) this.debugBoxHelper.visible = true; 
+                if (this.debugBoxHelper) this.debugBoxHelper.visible = true;
+                if (snapResult.didSnap) this._showSnapMarker(this.placementPreview.position.clone());
+                else this._hideSnapMarker();
                 this.placementPreview.updateMatrixWorld(true);
                 this.isPlacementValid = !this.isOverlapping(this.placementPreview);
                 const color = this.isPlacementValid ? this.validPlacementColor : this.invalidPlacementColor;
                 this.placementPreview.traverse(c => { if (c.isMesh && c.name !== 'planterSoil') c.material.color.set(color); });
             } else {
                 this.placementPreview.visible = false;
-                if (this.debugBoxHelper) this.debugBoxHelper.visible = false; 
+                if (this.debugBoxHelper) this.debugBoxHelper.visible = false;
+                this._hideSnapMarker();
             }
         }
 
@@ -2091,12 +2094,13 @@
                 const snapSize = this.controlsPanel.config.subdivisions;
                 finalPos.x = Math.round(point.x / snapSize) * snapSize;
                 finalPos.z = Math.round(point.z / snapSize) * snapSize;
+                didSnap = true;
             }
 
             // --- 2. Final Boundary Clamping ---
             const clampedResult = this._clampObjectToPlotBoundaries(finalPos, data, finalRot);
             
-            return { position: clampedResult.position, rotation: finalRot };
+            return { position: clampedResult.position, rotation: finalRot, didSnap };
         }
 
         _calculateEnhancedSnapPoints(object) {
@@ -2657,7 +2661,10 @@
 
         togglePlantSummaryPanel() {
             const isNowHidden = this.plantSummaryPanel.classList.toggle('hidden');
-            if (!isNowHidden) this.updatePlantSummaryPanel();
+            if (!isNowHidden) {
+                this._setupPlantSummaryListeners();
+                this.updatePlantSummaryPanel();
+            }
         }
 
         updatePlantSummaryPanel() {
@@ -2677,18 +2684,44 @@
                     });
                 }
             });
+            const filterInput = document.getElementById('plant-summary-filter');
+            const sortSelect = document.getElementById('plant-summary-sort');
+            const filterText = (filterInput?.value || '').trim().toLowerCase();
+            const sortBy = sortSelect?.value || 'name-asc';
+            let entries = Array.from(aggregatedPlants.entries()).map(([name, e]) => ({ name, ...e }));
+            if (filterText) entries = entries.filter(e => e.name.toLowerCase().includes(filterText));
+            entries.sort((a, b) => {
+                const defA = a.plantDefinition, defB = b.plantDefinition;
+                switch (sortBy) {
+                    case 'name-asc': return a.name.localeCompare(b.name);
+                    case 'name-desc': return b.name.localeCompare(a.name);
+                    case 'count-desc': return b.count - a.count;
+                    case 'count-asc': return a.count - b.count;
+                    case 'light': return (defA?.light || '').localeCompare(defB?.light || '');
+                    case 'water': return (defA?.avgWaterLitersPerWeek ?? 0) - (defB?.avgWaterLitersPerWeek ?? 0);
+                    case 'growth': return (defA?.avgGrowthTime || '').localeCompare(defB?.avgGrowthTime || '');
+                    default: return a.name.localeCompare(b.name);
+                }
+            });
             let tableBodyHtml = '';
-            const sortedPlantNames = Array.from(aggregatedPlants.keys()).sort();
-            sortedPlantNames.forEach(plantName => {
-                const entry = aggregatedPlants.get(plantName);
-                const plantDef = entry.plantDefinition; 
-                const planterList = Array.from(entry.planterNames).join(', ') || '-';
-                tableBodyHtml += `<tr><td>${plantName} (${entry.count})</td><td>${planterList}</td><td>${plantDef?.typicalSizeStr || '-'}</td><td>${plantDef?.light || '-'}</td><td>${(plantDef?.avgWaterLitersPerWeek !== undefined && plantDef.avgWaterLitersPerWeek !== null) ? `${plantDef.avgWaterLitersPerWeek}L` : '-'}</td><td>${plantDef?.yield || '-'}</td><td>${plantDef?.avgGrowthTime || '-'}</td><td>${plantDef?.sowTime || '-'}</td><td>${plantDef?.harvestTime || '-'}</td></tr>`;
+            entries.forEach(({ name: plantName, count, planterNames, plantDefinition: plantDef }) => {
+                const planterList = Array.from(planterNames).join(', ') || '-';
+                tableBodyHtml += `<tr><td>${plantName} (${count})</td><td>${planterList}</td><td>${plantDef?.typicalSizeStr || '-'}</td><td>${plantDef?.light || '-'}</td><td>${(plantDef?.avgWaterLitersPerWeek !== undefined && plantDef.avgWaterLitersPerWeek !== null) ? `${plantDef.avgWaterLitersPerWeek}L` : '-'}</td><td>${plantDef?.yield || '-'}</td><td>${plantDef?.avgGrowthTime || '-'}</td><td>${plantDef?.sowTime || '-'}</td><td>${plantDef?.harvestTime || '-'}</td></tr>`;
             });
             let panelContent = `<h3>Plant Summary</h3>`;
             if (totalIndividualPlants === 0) { panelContent += `<p>No plants currently placed in planters.</p>`; }
-            else { panelContent += `<table><thead><tr><th>Plant</th><th>In Planter</th><th>Space Needed</th><th>Light</th><th>Water (L/week)</th><th>Typical Yield</th><th>Avg. Growth</th><th>Sow Time</th><th>Harvest Time</th></tr></thead><tbody>${tableBodyHtml}</tbody></table><p>Total Individual Plants in Planters: ${totalIndividualPlants}</p>`; }
-            this.plantSummaryPanel.innerHTML = panelContent;
+            else { panelContent += `<table><thead><tr><th>Plant</th><th>In Planter</th><th>Space Needed</th><th>Light</th><th>Water (L/week)</th><th>Typical Yield</th><th>Avg. Growth</th><th>Sow Time</th><th>Harvest Time</th></tr></thead><tbody>${tableBodyHtml}</tbody></table><p>Total: ${totalIndividualPlants} plants${filterText ? ` (filtered)` : ''}</p>`; }
+            const contentEl = document.getElementById('plant-summary-content');
+            if (contentEl) contentEl.innerHTML = panelContent;
+            else this.plantSummaryPanel.innerHTML = panelContent;
+        }
+        _setupPlantSummaryListeners() {
+            if (this._plantSummaryListenersSetup) return;
+            const filterInput = document.getElementById('plant-summary-filter');
+            const sortSelect = document.getElementById('plant-summary-sort');
+            if (filterInput) filterInput.addEventListener('input', () => this.updatePlantSummaryPanel());
+            if (sortSelect) sortSelect.addEventListener('change', () => this.updatePlantSummaryPanel());
+            this._plantSummaryListenersSetup = true;
         }
         
         exportPlantSummary() {

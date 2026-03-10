@@ -1,6 +1,23 @@
 /* Base styles for entire page */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Toast notification */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 400;
+    background: rgba(40, 40, 40, 0.95);
+    color: #eee;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.toast.hidden { display: none !important; opacity: 0; }
+
 /* Mode indicator (status bar) */
 #mode-indicator {
     position: fixed;
@@ -241,6 +258,29 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 }
 
 /* Plant Summary Panel Styling */
+.plant-summary-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.plant-summary-controls label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9em;
+}
+.plant-summary-controls input,
+.plant-summary-controls select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #eee;
+    min-width: 120px;
+}
 #plant-summary-panel {
     left: 50%;
     transform: translateX(-50%);

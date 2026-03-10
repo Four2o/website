@@ -63,6 +63,17 @@
         log.error('Unhandled promise rejection', { reason: event.reason });
     };
 
+    window.showToast = function(message, durationMs) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.remove('hidden');
+        clearTimeout(window._toastTimeout);
+        window._toastTimeout = setTimeout(() => {
+            toast.classList.add('hidden');
+        }, durationMs || 2000);
+    };
+
     window.onload = function() {
         try {
             init();

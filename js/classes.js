@@ -45,6 +45,7 @@
             this.world.rebuildSceneFromData(JSON.parse(previousState), "Undo");
             this.isUndoingOrRedoing = false;
             this.updateButtons();
+            if (typeof window.showToast === 'function') window.showToast('Undo', 2000);
         }
         redo() {
             if (this.redoStack.length === 0) return;
@@ -54,6 +55,7 @@
             this.world.rebuildSceneFromData(JSON.parse(nextState), "Redo");
             this.isUndoingOrRedoing = false;
             this.updateButtons();
+            if (typeof window.showToast === 'function') window.showToast('Redo', 2000);
         }
         clear() {
             this.undoStack = [];
