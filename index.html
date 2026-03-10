@@ -2050,7 +2050,7 @@
                 this.controls.enabled = false;
                 this.showPlanterGrid(planter);
                 this.showPlantSelectionPanel();
-                this.infoPanel.show(`Add Plant to ${planter.name}`, 'Select a plant from the panel.', null);
+                this.infoPanel.show(`Add Plant to ${planter.name}`, 'Click a plant in the right panel, then click on the planter soil to place. Press Esc to cancel.', null);
             }
 
             activatePlantInPlanterPlacement(plantDef) {
@@ -2071,13 +2071,14 @@
                 this.addPopulateOptions(pane);
                 this.updatePlantInPlanterPreview();
                 this.mode = 'PLANT_IN_PLANTER_PLACEMENT';
-                this.infoPanel.show(`Adding ${plantDef.name}`, 'Click soil to place. Esc to cancel. R to rotate.', null);
+                this.infoPanel.show(`Adding ${plantDef.name}`, 'Move over the planter soil, then click to place. Press R to rotate. Esc to cancel or choose a different plant.', null);
             }
 
             addPlanterActionButtons(pane) {
                 const actionsFolder = pane.addFolder({ title: 'Planter Tools', expanded: true });
                 actionsFolder.addButton({ title: '↩️ Undo Last Action' }).on('click', () => this.undoLastPlanterOperation());
                 actionsFolder.addButton({ title: '🗑️ Remove All Plants' }).on('click', () => this.removeAllPlantsInPlanter());
+                actionsFolder.addButton({ title: '🌱 Choose Different Plant' }).on('click', () => this.backToPlantSelection());
             }
 
             addPopulateOptions(pane) {
@@ -2091,6 +2092,18 @@
                 const randomFolder = pane.addFolder({ title: 'Populate Randomly' });
                 randomFolder.addInput(this.randomPopulateConfig, 'count', { min: 1, max: 50, step: 1, label: 'Count' });
                 randomFolder.addButton({ title: 'Place Randomly' }).on('click', () => this._populateRandom(this.randomPopulateConfig.count));
+            }
+
+            backToPlantSelection() {
+                if (this.plantPlacementPreview) {
+                    this.plantPlacementPreview.parent?.remove(this.plantPlacementPreview);
+                    disposeObject(this.plantPlacementPreview);
+                    this.plantPlacementPreview = null;
+                }
+                this.plantToPlaceInPlanterConfig = null;
+                this.mode = 'PLANT_IN_PLANTER_SELECT_PLANT';
+                this.showPlantSelectionPanel();
+                this.infoPanel.show(`Add Plant to ${this.activePlanter.name}`, 'Click a plant in the right panel, then click on the planter soil to place. Press Esc to cancel.', null);
             }
 
             exitPlantInPlanterSelectionMode() {
@@ -2116,9 +2129,9 @@
             showPlantSelectionPanel() {
                 const pane = this._initRightToolPanel('Select Plant');
                 if (!pane) return;
-                pane.expanded = false; 
+                pane.expanded = true;
                 for (const category in PLANTS) {
-                    const folder = pane.addFolder({ title: category.charAt(0).toUpperCase() + category.slice(1) });
+                    const folder = pane.addFolder({ title: category.charAt(0).toUpperCase() + category.slice(1), expanded: true });
                     PLANTS[category].forEach(p => folder.addButton({ title: p.name }).on('click', () => this.activatePlantInPlanterPlacement(p)));
                 }
             }
