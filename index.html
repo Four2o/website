@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Allotment Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
@@ -33,12 +36,12 @@
         </div>
     </div>
 
-    <div id="info-modal" style="display:none;position:fixed;bottom:70px;right:20px;z-index:201;background:rgba(30,30,30,0.98);color:#fff;padding:24px 32px 18px 32px;border-radius:12px;box-shadow:0 4px 24px #000a;min-width:260px;max-width:90vw;">
-      <div style="font-size:1.2em;font-weight:bold;margin-bottom:8px;">About This Build</div>
+    <div id="info-modal">
+      <div>About This Build</div>
       <div><b>Version:</b> <span id="build-version">1.0.0</span></div>
       <div><b>Builder:</b> Four20 (with AI help)</div>
       <div><b>Build Date:</b> <span id="build-date">2024-06-09</span></div>
-      <button id="close-info-modal" aria-label="Close about modal" style="margin-top:16px;padding:6px 18px;border:none;background:#444;color:#fff;border-radius:6px;cursor:pointer;">Close</button>
+      <button id="close-info-modal" aria-label="Close about modal" class="modal-close-btn">Close</button>
     </div>
 
     <!-- HTML STRUCTURE -->

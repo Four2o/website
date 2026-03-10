@@ -1,5 +1,37 @@
-/* Base styles for entire page */
+/* ===== Design tokens ===== */
+:root {
+    --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+    --bg-dark: #0f1216;
+    --bg-panel: rgba(28, 32, 38, 0.92);
+    --bg-panel-hover: rgba(40, 46, 54, 0.95);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-muted: rgba(255, 255, 255, 0.12);
+    --text-primary: #f0f2f5;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --accent: #5a9e3b;
+    --accent-hover: #6bb84a;
+    --accent-muted: rgba(90, 158, 59, 0.25);
+    --danger: #dc4c3e;
+    --danger-muted: rgba(220, 76, 62, 0.2);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Base styles */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    overflow: hidden;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
 
 /* Toast notification */
 .toast {
@@ -8,31 +40,36 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 400;
-    background: rgba(40, 40, 40, 0.95);
-    color: #eee;
-    padding: 10px 20px;
-    border-radius: 8px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
     font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-subtle);
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .toast.hidden { display: none !important; opacity: 0; }
 
-/* Mode indicator (status bar) */
+/* Mode indicator */
 #mode-indicator {
     position: fixed;
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 150;
-    background: rgba(40, 40, 40, 0.9);
-    color: #eee;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 12px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
     pointer-events: none;
 }
-html, body { overflow: hidden; font-family: sans-serif; background-color: #111; }
 #scene-container {
     position: fixed;
     top: 0;
@@ -45,16 +82,16 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 /* General UI panel styling */
 .ui-panel {
     position: absolute;
-    background-color: rgba(40, 40, 40, 0.9);
-    color: #eee;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 10px; /* Consistent padding for all ui-panels */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Subtle shadow for depth */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions for show/hide */
-    z-index: 100; /* Ensure panels are above the 3D scene by default */
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    padding: 14px;
+    box-shadow: var(--shadow-md);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 100;
 }
 
 /* NEW: Unified .hidden class for all ui-panels */
@@ -123,17 +160,21 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 /* NEW: Styling for the search input in the sidebar */
 #sidebar-search-input {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(0, 0, 0, 0.3);
-    color: #eee;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-muted);
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--text-primary);
     font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+#sidebar-search-input::placeholder { color: var(--text-muted); }
 #sidebar-search-input:focus {
     outline: none;
-    border-color: rgba(80, 150, 255, 0.5);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-muted);
 }
 /* Container for the Tweakpane instance to allow scrolling */
 #sidebar-pane-container {
@@ -154,94 +195,121 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     -webkit-backdrop-filter: none;
 }
 
-/* General Tweakpane overrides: ensure they fit into ui-panel style */
+/* Tweakpane overrides */
 .tp-dfwv {
-    background-color: transparent !important; /* Let ui-panel handle background */
-    border: none !important; /* Let ui-panel handle border */
-    box-shadow: none !important; /* Let ui-panel handle shadow */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
+.tp-rotv_t {
+    color: var(--text-secondary) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+}
+.tp-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid var(--border-muted) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 500 !important;
+    transition: background 0.2s ease !important;
+}
+.tp-btn:hover { background: rgba(255, 255, 255, 0.14) !important; }
 
-/* Info Panel styles (for messages like "Saved", "Error", etc.) */
+/* Info Panel */
 #info-panel {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 450px;
+    width: 420px;
+    max-width: 90vw;
     text-align: center;
-    z-index: 102; /* Highest z-index for alerts */
+    z-index: 102;
 }
-
+#info-panel h3 { margin-bottom: 10px; font-size: 1.15em; font-weight: 600; }
+#info-panel p { font-size: 0.95em; color: var(--text-secondary); line-height: 1.5; }
 #info-panel #info-button {
-    margin-top: 15px;
-    padding: 8px 15px;
+    margin-top: 16px;
+    padding: 10px 24px;
     border: none;
-    background-color: #c84138; /* Red for action/dismiss */
+    background: var(--danger);
     color: white;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: background 0.2s ease;
 }
 #info-panel #info-button:hover {
-    background-color: #e06158;
+    background: #e85a4d;
 }
-#info-panel h3 { margin-bottom: 8px; font-size: 1.1em; }
-#info-panel p { font-size: 0.9em; }
 
-/* Save/Load Panel Styling */
+/* Save/Load Panel */
 #saveLoadPanel {
     position: absolute;
     bottom: 15px;
     left: 15px;
-    width: 280px; /* Match main controls width for symmetry */
-    z-index: 99; /* Ensure it's above the summary panel */
-    padding: 8px; /* Consistent with other panels */
+    width: 280px;
+    z-index: 99;
+    padding: 14px;
 }
 #saveLoadPanel h3 {
     font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgb(153, 153, 153);
-    margin: 12px 0 8px 0;
-    padding: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 4px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 14px 0 10px 0;
+    padding: 0 0 6px 0;
+    border-bottom: 1px solid var(--border-subtle);
 }
 #saveLoadPanel h3:first-child { margin-top: 0; }
-#saveLoadPanel .btn-accent { background-color: rgba(60, 120, 220, 0.2); }
-#saveLoadPanel .btn-danger { background-color: rgba(220, 60, 60, 0.2); }
+#saveLoadPanel .btn-accent {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+#saveLoadPanel .btn-accent:hover { background: rgba(59, 130, 246, 0.3); }
+#saveLoadPanel .btn-danger {
+    background: var(--danger-muted);
+    border-color: rgba(220, 76, 62, 0.3);
+}
+#saveLoadPanel .btn-danger:hover { background: rgba(220, 76, 62, 0.35); }
 #saveLoadPanel button, #saveLoadPanel label.save-btn {
     width: 100%;
-    margin-bottom: 6px;
-    padding: 8px 12px;
+    margin-bottom: 8px;
+    padding: 10px 14px;
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.1);
-    color: rgb(242, 242, 242);
-    border-radius: 4px;
+    gap: 8px;
+    border: 1px solid var(--border-muted);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.2s, border-color 0.2s;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: background 0.2s ease, border-color 0.2s ease;
     text-align: center;
     touch-action: manipulation;
 }
-/* NEW: Styling for disabled buttons */
 #saveLoadPanel button:disabled {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: rgba(242, 242, 242, 0.3);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-muted);
     cursor: not-allowed;
-    border-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-subtle);
 }
 #saveLoadPanel button:not(:disabled):hover, #saveLoadPanel label.save-btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--border-muted);
 }
 #saveLoadPanel button:not(:disabled):active, #saveLoadPanel label.save-btn:active {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.16);
 }
 #saveLoadPanel button:last-of-type, #saveLoadPanel label.save-btn:last-of-type {
     margin-bottom: 0;
@@ -302,8 +370,8 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     table-layout: fixed;
 }
 #plant-summary-panel th, #plant-summary-panel td {
-    padding: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 10px;
+    border: 1px solid var(--border-subtle);
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
@@ -311,7 +379,7 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     vertical-align: top;
 }
 #plant-summary-panel thead tr {
-    background-color: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 0;
     z-index: 1;
@@ -326,15 +394,15 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 #plant-summary-panel th:nth-child(8) { width: 200px; }
 #plant-summary-panel th:nth-child(9) { width: 130px; }
 
-/* Floating action buttons (info, shortcuts, axis toggle) - before media query so overrides work */
+/* Floating action buttons */
 .floating-btn {
     position: fixed;
     z-index: 200;
     border-radius: 50%;
-    background: #222;
-    color: #fff;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -342,19 +410,27 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
     min-width: 44px;
     min-height: 44px;
     font-size: 1.2em;
+    transition: background 0.2s ease, transform 0.15s ease;
 }
-.floating-btn:hover { background: #333; }
-.floating-btn:focus { outline: 2px solid #6b8e23; outline-offset: 2px; }
+.floating-btn:hover {
+    background: var(--bg-panel-hover);
+    transform: scale(1.03);
+}
+.floating-btn:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
 .shortcuts-btn { bottom: 80px; right: 20px; font-size: 1.4em; font-weight: bold; }
 .info-btn { bottom: 20px; right: 20px; font-size: 1.5em; }
 .axis-toggle-btn { bottom: 130px; right: 20px; z-index: 251; font-size: 1.6em; }
 
-/* Shortcuts modal overlay */
+/* Shortcuts modal */
 .shortcuts-overlay {
     position: fixed;
     inset: 0;
     z-index: 300;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -362,34 +438,59 @@ html, body { overflow: hidden; font-family: sans-serif; background-color: #111; 
 }
 .shortcuts-overlay.hidden { display: none !important; }
 .shortcuts-modal-content {
-    background: rgba(30,30,30,0.98);
-    color: #fff;
-    padding: 24px 32px;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-    min-width: 280px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 28px 36px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+    min-width: 300px;
     max-width: 90vw;
 }
-.shortcuts-modal-content h2 { margin-bottom: 16px; font-size: 1.2em; }
-.shortcuts-list { margin: 0 0 20px 0; }
-.shortcuts-list dt { float: left; font-weight: bold; min-width: 140px; margin-bottom: 6px; }
-.shortcuts-list dd { margin: 0 0 6px 140px; color: #bbb; }
+.shortcuts-modal-content h2 { margin-bottom: 20px; font-size: 1.25em; font-weight: 600; }
+.shortcuts-list { margin: 0 0 24px 0; }
+.shortcuts-list dt { float: left; font-weight: 600; min-width: 150px; margin-bottom: 8px; color: var(--text-primary); }
+.shortcuts-list dd { margin: 0 0 8px 150px; color: var(--text-secondary); }
 .modal-close-btn {
-    padding: 8px 20px;
-    border: none;
-    background: #444;
-    color: #fff;
-    border-radius: 6px;
+    padding: 10px 24px;
+    border: 1px solid var(--border-muted);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
     min-height: 44px;
+    transition: background 0.2s ease;
 }
-.modal-close-btn:hover { background: #555; }
+.modal-close-btn:hover { background: rgba(255, 255, 255, 0.14); }
+
+/* Info modal (About) */
+#info-modal {
+    display: none;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    z-index: 201;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    padding: 24px 28px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+    min-width: 260px;
+    max-width: 90vw;
+}
+#info-modal > div:first-child { font-size: 1.15em; font-weight: 600; margin-bottom: 12px; }
+#info-modal div { margin-bottom: 6px; font-size: 0.95em; color: var(--text-secondary); }
+#info-modal .modal-close-btn, #info-modal button { margin-top: 16px; }
 
 #plant-summary-panel h3, #plant-summary-panel p {
     margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgb(153, 153, 153);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-muted);
     font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
