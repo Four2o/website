@@ -49,16 +49,49 @@
     <!-- HTML STRUCTURE -->
     <div id="scene-container"></div>
 
-    <!-- Main Allotment Controls Panel (always visible) -->
-    <div id="main-controls-container" class="ui-panel"></div>
+    <!-- LEFT COLUMN: Settings + Save/Load stacked in one rail -->
+    <div id="left-column">
+        <!-- Main Allotment Controls Panel (always visible) -->
+        <div id="main-controls-container" class="ui-panel"></div>
 
-    <!-- Dynamic Right Tool Panel (Object Editor or Placement Settings dynamically) -->
-    <div id="right-tool-panel-container" class="ui-panel hidden"></div>
+        <!-- Save/Load Panel (always visible) -->
+        <div id="saveLoadPanel" class="ui-panel">
+            <h3>History</h3>
+            <div class="button-grid">
+                <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
+                <button id="redoBtn" aria-label="Redo (Ctrl+Y)">↪️ Redo</button>
+            </div>
+            <h3>Templates</h3>
+            <select id="templateSelect" aria-label="Start from template">
+                <option value="">Start from template...</option>
+            </select>
+            <h3>Save &amp; Load</h3>
+            <button id="saveLayoutBtn">💾 Save to browser</button>
+            <button id="loadLayoutBtn">📂 Load from browser</button>
+            <button id="exportLayoutBtn">⬇ Download file</button>
+            <label class="save-btn">
+                📁 Upload file
+                <input type="file" id="importFile" accept=".json" />
+            </label>
+            <h3>Tools</h3>
+            <button id="randomizeLayoutBtn" class="btn-accent">🎲 Randomize layout</button>
+            <button id="clearAllBtn" class="btn-danger">⚠️ Clear all</button>
+            <button id="perimeterFenceBtn" class="btn-accent">🏗️ Add perimeter fence</button>
+            <h3>Reports</h3>
+            <button id="exportPlantSummaryBtn">🖨️ Plant summary</button>
+        </div>
+    </div>
 
-    <!-- Placeables Sidebar (always visible) -->
-    <div id="sidebar-container" class="ui-panel">
-        <!-- Search input will be prepended here by JS -->
-        <div id="sidebar-pane-container"></div>
+    <!-- RIGHT COLUMN: Object tools + Add Items stacked in one rail -->
+    <div id="right-column">
+        <!-- Dynamic Right Tool Panel (Object Editor or Placement Settings dynamically) -->
+        <div id="right-tool-panel-container" class="ui-panel hidden"></div>
+
+        <!-- Placeables Sidebar (always visible) -->
+        <div id="sidebar-container" class="ui-panel">
+            <!-- Search input will be prepended here by JS -->
+            <div id="sidebar-pane-container"></div>
+        </div>
     </div>
 
     <!-- Plant Summary Panel -->
@@ -83,33 +116,6 @@
         <h3 id="info-title"></h3>
         <p id="info-details"></p>
         <button id="info-button">Action</button>
-    </div>
-
-    <!-- Save/Load Panel (always visible) -->
-    <div id="saveLoadPanel" class="ui-panel">
-        <h3>History</h3>
-        <div class="button-grid">
-            <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
-            <button id="redoBtn" aria-label="Redo (Ctrl+Y)">↪️ Redo</button>
-        </div>
-        <h3>Templates</h3>
-        <select id="templateSelect" aria-label="Start from template">
-            <option value="">Start from template...</option>
-        </select>
-        <h3>Save &amp; Load</h3>
-        <button id="saveLayoutBtn">💾 Save to browser</button>
-        <button id="loadLayoutBtn">📂 Load from browser</button>
-        <button id="exportLayoutBtn">⬇ Download file</button>
-        <label class="save-btn">
-            📁 Upload file
-            <input type="file" id="importFile" accept=".json" />
-        </label>
-        <h3>Tools</h3>
-        <button id="randomizeLayoutBtn" class="btn-accent">🎲 Randomize layout</button>
-        <button id="clearAllBtn" class="btn-danger">⚠️ Clear all</button>
-        <button id="perimeterFenceBtn" class="btn-accent">🏗️ Add perimeter fence</button>
-        <h3>Reports</h3>
-        <button id="exportPlantSummaryBtn">🖨️ Plant summary</button>
     </div>
 
     <!-- 3D Axis Indicator -->

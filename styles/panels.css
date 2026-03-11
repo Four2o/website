@@ -1,23 +1,57 @@
 /**
  * Panel and Tweakpane overrides – loaded after Tweakpane.
- * Unifies Settings, Add Items, and Save/Load panels to the same style.
+ * Unifies Settings, Add Items, and Save/Load panels, and gives them a better layout.
  */
 
-/* All panels: same padding as Save/Load */
+/* Shared panel padding */
 .ui-panel { padding: 12px 14px !important; }
 
-/* Same width (240px) across Settings, Add Items, Save/Load */
-#main-controls-container {
-    width: 240px !important;
-    max-height: calc(100vh - 30px - 500px) !important;
+/* Column rails on left and right – stack panels vertically instead of overlapping */
+#left-column,
+#right-column {
+    position: absolute;
+    top: 15px;
+    bottom: 15px;
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none; /* individual panels re-enable */
 }
-#sidebar-container { width: 240px !important; }
+
+#left-column { left: 15px; }
+#right-column { right: 15px; }
+
+/* Panels inside rails become relative, fill width, and can scroll */
+#left-column .ui-panel,
+#right-column .ui-panel {
+    position: relative !important;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100% !important;
+    max-height: none !important;
+    pointer-events: auto;
+}
+
+/* Main Settings and Add Items take remaining space and scroll */
+#main-controls-container,
+#sidebar-container {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Save/Load and Right Tool panels size to content */
+#saveLoadPanel,
 #right-tool-panel-container {
-    right: 265px !important;
-    width: 220px !important;
+    flex: 0 0 auto;
 }
+
+/* Match visual width of rails with Save/Load panel */
 #saveLoadPanel {
-    width: 240px !important;
+    width: 100% !important;
     padding: 12px 14px !important;
 }
 #saveLoadPanel h3 { margin: 12px 0 8px 0 !important; padding-bottom: 6px !important; }
@@ -64,4 +98,14 @@
     background: rgba(255, 255, 255, 0.06) !important;
     min-height: 36px !important;
     font-size: 13px !important;
+}
+
+/* Responsive: on small screens, stack the two rails vertically */
+@media (max-width: 768px) {
+    #left-column,
+    #right-column {
+        position: static;
+        width: auto;
+        height: auto;
+    }
 }
