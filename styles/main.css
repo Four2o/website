@@ -94,6 +94,22 @@ html, body {
     z-index: 100;
 }
 
+.panel-header {
+    margin-bottom: 8px;
+}
+.panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+.panel-divider {
+    height: 1px;
+    margin: 10px 0;
+    background: var(--border-subtle);
+}
+
 /* NEW: Unified .hidden class for all ui-panels */
 .ui-panel.hidden {
     opacity: 0;

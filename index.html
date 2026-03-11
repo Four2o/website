@@ -51,8 +51,14 @@
 
     <!-- LEFT: Single Control panel (Settings + Save/Load + Tools/Reports) -->
     <div id="left-panel" class="ui-panel">
+        <div class="panel-header">
+            <div class="panel-title">Settings</div>
+        </div>
+
         <!-- Main Allotment Controls (Tweakpane mounts here) -->
         <div id="main-controls-container"></div>
+
+        <div class="panel-divider"></div>
 
         <!-- Save/Load + Tools/Reports -->
         <div id="saveLoadPanel">
@@ -83,8 +89,15 @@
     </div>
     <!-- RIGHT: Single Library panel (Add items + Inspector) -->
     <div id="sidebar-container" class="ui-panel">
-        <!-- Search input will be prepended here by JS -->
+        <div class="panel-header">
+            <div class="panel-title">Add items</div>
+        </div>
+
+        <!-- Search input + categories (Tweakpane mounts here) -->
         <div id="sidebar-pane-container"></div>
+
+        <div class="panel-divider"></div>
+
         <!-- Dynamic Right Tool Panel (Object Editor or Placement Settings) -->
         <div id="right-tool-panel-container" class="inspector-panel hidden"></div>
     </div>
