@@ -36,7 +36,7 @@
 }
 
 /* Main Settings and Add Items take remaining space and scroll */
-#main-controls-container,
+.left-tab-panel,
 #sidebar-container {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -105,6 +105,35 @@
     background: rgba(255, 255, 255, 0.06) !important;
     min-height: 36px !important;
     font-size: 13px !important;
+}
+
+/* Tab bar styling */
+.left-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 8px 8px !important;
+}
+.left-tab-button {
+    flex: 1 1 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 8px;
+}
+.left-tab-button.is-active {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    border-color: var(--border-muted);
+}
+.left-tab-panel {
+    display: none;
+}
+.left-tab-panel.is-active {
+    display: block;
 }
 
 /* Responsive: on small screens, stack the two rails vertically */

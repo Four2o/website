@@ -49,13 +49,20 @@
     <!-- HTML STRUCTURE -->
     <div id="scene-container"></div>
 
-    <!-- LEFT COLUMN: Settings + Save/Load stacked in one rail -->
+    <!-- LEFT COLUMN: Tabbed control center (Settings / Save & Load / Reports) -->
     <div id="left-column">
-        <!-- Main Allotment Controls Panel (always visible) -->
-        <div id="main-controls-container" class="ui-panel"></div>
+        <!-- Tab bar -->
+        <div id="left-tabs" class="ui-panel left-tabs">
+            <button class="left-tab-button is-active" data-target="main-controls-container">Settings</button>
+            <button class="left-tab-button" data-target="saveLoadPanel">Save &amp; Load</button>
+            <button class="left-tab-button" data-target="reports-panel">Reports</button>
+        </div>
 
-        <!-- Save/Load Panel (always visible) -->
-        <div id="saveLoadPanel" class="ui-panel">
+        <!-- Main Allotment Controls Panel (tab content) -->
+        <div id="main-controls-container" class="ui-panel left-tab-panel is-active"></div>
+
+        <!-- Save/Load Panel (tab content) -->
+        <div id="saveLoadPanel" class="ui-panel left-tab-panel">
             <h3>History</h3>
             <div class="button-grid">
                 <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
@@ -79,6 +86,12 @@
             <button id="perimeterFenceBtn" class="btn-accent">🏗️ Add perimeter fence</button>
             <h3>Reports</h3>
             <button id="exportPlantSummaryBtn">🖨️ Plant summary</button>
+        </div>
+
+        <!-- Reports Panel (tab content, currently just uses the plant summary button) -->
+        <div id="reports-panel" class="ui-panel left-tab-panel">
+            <h3>Reports</h3>
+            <button id="exportPlantSummaryBtn-tab">🖨️ Plant summary</button>
         </div>
     </div>
 

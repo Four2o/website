@@ -131,34 +131,58 @@
         });
     })();
 
-    // Axis indicator toggle button logic
+    // Axis indicator toggle button logic + left tab switching
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('axis-indicator-toggle-btn');
-        if (!btn) return;
-        function updateBtn() {
-            try {
-                if (window.world && window.world.controlsPanel && window.world.controlsPanel.config) {
-                    if (window.world.controlsPanel.config.showAxisIndicator) {
-                        btn.textContent = '👁️';
-                        btn.title = 'Hide Axis Widget';
-                    } else {
-                        btn.textContent = '🚫';
-                        btn.title = 'Show Axis Widget';
+        if (btn) {
+            function updateBtn() {
+                try {
+                    if (window.world && window.world.controlsPanel && window.world.controlsPanel.config) {
+                        if (window.world.controlsPanel.config.showAxisIndicator) {
+                            btn.textContent = '👁️';
+                            btn.title = 'Hide Axis Widget';
+                        } else {
+                            btn.textContent = '🚫';
+                            btn.title = 'Show Axis Widget';
+                        }
                     }
-                }
-            } catch (e) { /* Do nothing */ }
+                } catch (e) { /* Do nothing */ }
+            }
+            btn.addEventListener('click', function() {
+                try {
+                    if (window.world && window.world.controlsPanel && window.world.toggleAxisIndicator) {
+                        const newState = !window.world.controlsPanel.config.showAxisIndicator;
+                        window.world.controlsPanel.config.showAxisIndicator = newState;
+                        window.world.toggleAxisIndicator(newState);
+                        updateBtn();
+                    }
+                } catch (e) { /* Do nothing */ }
+            });
+            setInterval(updateBtn, 500);
+            updateBtn();
         }
-        btn.addEventListener('click', function() {
-            try {
-                if (window.world && window.world.controlsPanel && window.world.toggleAxisIndicator) {
-                    const newState = !window.world.controlsPanel.config.showAxisIndicator;
-                    window.world.controlsPanel.config.showAxisIndicator = newState;
-                    window.world.toggleAxisIndicator(newState);
-                    updateBtn();
-                }
-            } catch (e) { /* Do nothing */ }
-        });
-        setInterval(updateBtn, 500);
-        updateBtn();
+
+        // Left tab switching for Settings / Save & Load / Reports
+        const tabBar = document.getElementById('left-tabs');
+        if (tabBar) {
+            const buttons = Array.from(tabBar.querySelectorAll('.left-tab-button'));
+            const panels = Array.from(document.querySelectorAll('.left-tab-panel'));
+            function activate(targetId) {
+                panels.forEach(p => {
+                    if (p.id === targetId) p.classList.add('is-active');
+                    else p.classList.remove('is-active');
+                });
+                buttons.forEach(b => {
+                    if (b.getAttribute('data-target') === targetId) b.classList.add('is-active');
+                    else b.classList.remove('is-active');
+                });
+            }
+            buttons.forEach(btnEl => {
+                btnEl.addEventListener('click', () => {
+                    const target = btnEl.getAttribute('data-target');
+                    if (target) activate(target);
+                });
+            });
+        }
     });
 })();
