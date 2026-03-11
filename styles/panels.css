@@ -62,14 +62,21 @@
 /* Section headers – match Save/Load h3 exactly */
 .tp-rotv_t,
 .tp-fldv_t {
-    font-size: 10px !important;
+    font-size: 11px !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.08em !important;
-    color: var(--text-muted) !important;
-    margin: 12px 0 8px 0 !important;
+    color: var(--text-secondary) !important; /* brighter for better contrast */
+    margin: 10px 0 6px 0 !important;
     padding: 0 0 6px 0 !important;
     border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+/* Field labels and values – ensure they are bright enough */
+.tp-lblv_l,
+.tp-sldv_t,
+.tp-txtv_i {
+    color: var(--text-primary) !important;
 }
 
 /* Buttons – match Save/Load button exactly */
