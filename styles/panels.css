@@ -6,53 +6,10 @@
 /* Shared panel padding */
 .ui-panel { padding: 12px 14px !important; }
 
-/* Column rails on left and right – stack panels vertically instead of overlapping */
-#left-column,
-#right-column {
-    position: absolute;
-    top: 15px;
-    bottom: 15px;
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none; /* individual panels re-enable */
-}
-
-#left-column { left: 15px; }
-#right-column { right: 15px; }
-
-/* Panels inside rails become relative, fill width, and can scroll */
-#left-column .ui-panel,
-#right-column .ui-panel {
-    position: relative !important;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    width: 100% !important;
-    max-height: none !important;
-    pointer-events: auto;
-}
-
-/* Main Settings and Add Items take remaining space and scroll */
-.left-tab-panel,
-#sidebar-container {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/* Save/Load and Right Tool panels size to content */
-#saveLoadPanel,
-#right-tool-panel-container {
-    flex: 0 0 auto;
-}
-
-/* Match visual width of rails with Save/Load panel */
+/* Save/Load section inside left panel */
 #saveLoadPanel {
     width: 100% !important;
-    padding: 12px 14px !important;
+    padding: 0 !important;
 }
 #saveLoadPanel h3 { margin: 12px 0 8px 0 !important; padding-bottom: 6px !important; }
 #saveLoadPanel h3:first-child { margin-top: 0 !important; }
@@ -107,41 +64,3 @@
     font-size: 13px !important;
 }
 
-/* Tab bar styling */
-.left-tabs {
-    display: flex;
-    gap: 6px;
-    padding: 8px 8px !important;
-}
-.left-tab-button {
-    flex: 1 1 0;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-subtle);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 6px 8px;
-}
-.left-tab-button.is-active {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--text-primary);
-    border-color: var(--border-muted);
-}
-.left-tab-panel {
-    display: none;
-}
-.left-tab-panel.is-active {
-    display: block;
-}
-
-/* Responsive: on small screens, stack the two rails vertically */
-@media (max-width: 768px) {
-    #left-column,
-    #right-column {
-        position: static;
-        width: auto;
-        height: auto;
-    }
-}

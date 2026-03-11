@@ -49,20 +49,13 @@
     <!-- HTML STRUCTURE -->
     <div id="scene-container"></div>
 
-    <!-- LEFT COLUMN: Tabbed control center (Settings / Save & Load / Reports) -->
-    <div id="left-column">
-        <!-- Tab bar -->
-        <div id="left-tabs" class="ui-panel left-tabs">
-            <button class="left-tab-button is-active" data-target="main-controls-container">Settings</button>
-            <button class="left-tab-button" data-target="saveLoadPanel">Save &amp; Load</button>
-            <button class="left-tab-button" data-target="reports-panel">Reports</button>
-        </div>
+    <!-- LEFT: Single Control panel (Settings + Save/Load + Tools/Reports) -->
+    <div id="left-panel" class="ui-panel">
+        <!-- Main Allotment Controls (Tweakpane mounts here) -->
+        <div id="main-controls-container"></div>
 
-        <!-- Main Allotment Controls Panel (tab content) -->
-        <div id="main-controls-container" class="ui-panel left-tab-panel is-active"></div>
-
-        <!-- Save/Load Panel (tab content) -->
-        <div id="saveLoadPanel" class="ui-panel left-tab-panel">
+        <!-- Save/Load + Tools/Reports -->
+        <div id="saveLoadPanel">
             <h3>History</h3>
             <div class="button-grid">
                 <button id="undoBtn" aria-label="Undo (Ctrl+Z)">↩️ Undo</button>
@@ -87,24 +80,13 @@
             <h3>Reports</h3>
             <button id="exportPlantSummaryBtn">🖨️ Plant summary</button>
         </div>
-
-        <!-- Reports Panel (tab content, currently just uses the plant summary button) -->
-        <div id="reports-panel" class="ui-panel left-tab-panel">
-            <h3>Reports</h3>
-            <button id="exportPlantSummaryBtn-tab">🖨️ Plant summary</button>
-        </div>
     </div>
-
-    <!-- RIGHT COLUMN: Object tools + Add Items stacked in one rail -->
-    <div id="right-column">
-        <!-- Dynamic Right Tool Panel (Object Editor or Placement Settings dynamically) -->
-        <div id="right-tool-panel-container" class="ui-panel hidden"></div>
-
-        <!-- Placeables Sidebar (always visible) -->
-        <div id="sidebar-container" class="ui-panel">
-            <!-- Search input will be prepended here by JS -->
-            <div id="sidebar-pane-container"></div>
-        </div>
+    <!-- RIGHT: Single Library panel (Add items + Inspector) -->
+    <div id="sidebar-container" class="ui-panel">
+        <!-- Search input will be prepended here by JS -->
+        <div id="sidebar-pane-container"></div>
+        <!-- Dynamic Right Tool Panel (Object Editor or Placement Settings) -->
+        <div id="right-tool-panel-container" class="inspector-panel hidden"></div>
     </div>
 
     <!-- Plant Summary Panel -->

@@ -107,15 +107,22 @@ html, body {
     display: block; /* Default display for most UI panels */
 }
 
-/* Main controls container – same width as Save/Load */
-#main-controls-container {
+/* LEFT: Single control panel */
+#left-panel {
+    position: absolute;
     top: 15px;
+    bottom: 15px;
     left: 15px;
-    width: 240px;
-    max-height: calc(100vh - 30px - 500px);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+}
+#main-controls-container {
+    flex: 1 1 auto;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 100;
 }
 #main-controls-container::-webkit-scrollbar { width: 8px; }
 #main-controls-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
@@ -125,48 +132,21 @@ html, body {
     position: relative !important;
     top: auto;
     left: auto;
-    width: auto !important; /* Allow it to fill parent */
-    height: auto !important; /* Allow it to fit content */
-}
-
-/* Right Tool Panel */
-#right-tool-panel-container {
-    top: 15px;
-    right: 265px;
-    width: 220px;
-    max-height: calc(100vh - 30px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 101;
-}
-#right-tool-panel-container::-webkit-scrollbar { width: 8px; }
-#right-tool-panel-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-#right-tool-panel-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
-#right-tool-panel-container .tp-dfwv { /* Override Tweakpane's defaults for embedded panes */
-    position: relative !important;
-    top: auto;
-    left: auto;
     width: auto !important;
     height: auto !important;
 }
-/* Flexbox for labels and values in Tweakpane-generated embedded panels */
-#right-tool-panel-container .tp-lblv { display: flex; justify-content: space-between; align-items: center; }
-#right-tool-panel-container .tp-lblv_l { flex-grow: 1; }
-#right-tool-panel-container .tp-lblv_v { width: 110px; flex-shrink: 0; }
 
-/* Sidebar */
+/* RIGHT: Single library panel */
 #sidebar-container {
+    position: absolute;
     top: 15px;
+    bottom: 15px;
     right: 15px;
-    width: 240px;
-    max-height: calc(100vh - 30px);
+    width: 280px;
     display: flex;
     flex-direction: column;
     z-index: 100;
 }
-#sidebar-container::-webkit-scrollbar { width: 8px; }
-#sidebar-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-#sidebar-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 /* Search input in the sidebar */
 #sidebar-search-input {
     width: 100%;
@@ -186,9 +166,8 @@ html, body {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px var(--accent-muted);
 }
-/* Container for the Tweakpane instance to allow scrolling */
 #sidebar-pane-container {
-    flex-grow: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
     padding-right: 4px;
 }
@@ -255,6 +234,16 @@ html, body {
     border-color: var(--border-muted) !important;
 }
 #sidebar-pane-container .tp-btnv { margin-bottom: 6px !important; }
+
+/* Right-side inspector panel */
+.inspector-panel {
+    margin-top: 10px;
+    max-height: 35%;
+    overflow-y: auto;
+}
+.inspector-panel::-webkit-scrollbar { width: 8px; }
+.inspector-panel::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+.inspector-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 
 /* Info Panel */
 #info-panel {
