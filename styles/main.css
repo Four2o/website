@@ -84,12 +84,10 @@ html, body {
     position: absolute;
     background: var(--bg-panel);
     color: var(--text-primary);
-    border-radius: var(--radius-lg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
-    padding: 12px 14px;
-    box-shadow: var(--shadow-md);
+    padding: 8px 10px;
+    box-shadow: var(--shadow-sm);
     transition: opacity 0.25s ease, transform 0.25s ease;
     z-index: 100;
 }

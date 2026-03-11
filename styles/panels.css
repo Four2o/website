@@ -3,15 +3,15 @@
  * Unifies Settings, Add Items, and Save/Load panels, and gives them a better layout.
  */
 
-/* Shared panel padding */
-.ui-panel { padding: 12px 14px !important; }
+/* Shared panel padding override (compact) */
+.ui-panel { padding: 8px 10px !important; }
 
 /* Save/Load section inside left panel */
 #saveLoadPanel {
     width: 100% !important;
     padding: 0 !important;
 }
-#saveLoadPanel h3 { margin: 12px 0 8px 0 !important; padding-bottom: 6px !important; }
+#saveLoadPanel h3 { margin: 8px 0 6px 0 !important; padding-bottom: 4px !important; }
 #saveLoadPanel h3:first-child { margin-top: 0 !important; }
 #saveLoadPanel button, #saveLoadPanel label.save-btn { margin-bottom: 6px !important; }
 #saveLoadPanel select { margin-bottom: 6px !important; }
@@ -24,8 +24,8 @@
     text-transform: uppercase !important;
     letter-spacing: 0.08em !important;
     color: var(--text-secondary) !important; /* brighter for better contrast */
-    margin: 10px 0 6px 0 !important;
-    padding: 0 0 6px 0 !important;
+    margin: 8px 0 4px 0 !important;
+    padding: 0 0 4px 0 !important;
     border-bottom: 1px solid var(--border-subtle) !important;
 }
 
@@ -42,8 +42,8 @@
     width: 100% !important;
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid var(--border-muted) !important;
-    padding: 8px 10px !important;
-    min-height: 36px !important;
+    padding: 6px 8px !important;
+    min-height: 30px !important;
     font-size: 13px !important;
     font-weight: 500 !important;
 }
@@ -52,12 +52,12 @@
     background: rgba(255, 255, 255, 0.12) !important;
     border-color: var(--border-muted) !important;
 }
-#sidebar-pane-container .tp-btnv { margin-bottom: 6px !important; }
+#sidebar-pane-container .tp-btnv { margin-bottom: 4px !important; }
 
 /* Search input – match Save/Load select */
 #sidebar-search-input {
-    padding: 8px 10px !important;
-    margin-bottom: 8px !important;
+    padding: 6px 8px !important;
+    margin-bottom: 6px !important;
     border: 1px solid var(--border-muted) !important;
     background: rgba(255, 255, 255, 0.06) !important;
     min-height: 36px !important;
