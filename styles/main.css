@@ -288,14 +288,10 @@ html, body {
     background: #e85a4d;
 }
 
-/* Save/Load Panel */
+/* Save/Load Panel (inside left panel, normal flow) */
 #saveLoadPanel {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    width: 240px;
-    z-index: 101;
-    padding: 12px 14px;
+    position: static;
+    margin-top: 4px;
 }
 #saveLoadPanel h3 {
     font-size: 10px;
